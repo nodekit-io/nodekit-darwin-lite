@@ -6,7 +6,7 @@ s.description  = "NodeKit is the universal, open-source, embedded engine that pr
 s.homepage     = "https://github.com/nodekit-io/nodekit"
 s.license      = { :type => 'APACHE-2', :file => 'LICENSE' }
 s.author       = { "OffGrid Networks" => 'admin@offgridn.com' }
-s.source       = { :git => "https://github.com/nodekit-io/nodekit-darwin-core.git" }
+s.source       = { :git => "https://github.com/nodekit-io/nodekit-darwin-lite.git" }
 
 s.ios.deployment_target = '9.0'
 s.osx.deployment_target = '10.11'
