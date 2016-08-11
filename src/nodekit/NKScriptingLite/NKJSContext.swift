@@ -51,6 +51,12 @@ public class NKJSContext: NSObject {
         
         self.injectJavaScript(NKScriptSource(source: script, asFilename: "io.nodekit.scripting/init_jsc", namespace: "io.nodekit.scripting.init"))
         
+        guard let source2 = NKStorage.getResource("lib-scripting.nkar/lib-scripting/promise.js", NKJSContext.self) else {
+            NKLogging.die("Failed to read provision script: promise")
+        }
+        
+        self.injectJavaScript(NKScriptSource(source: source2, asFilename: "io.nodekit.scripting/NKScripting/promise.js", namespace: "Promise"))
+        
         NKStorage.attachTo(self)
     }
 }
