@@ -1,0 +1,635 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E48C6C341D5AA27400D67B5D /* libcompression.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E48C6C331D5AA27400D67B5D /* libcompression.tbd */; };
+		E48C6C841D5AAFB500D67B5D /* NKScripting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E48C6BC71D5A946200D67B5D /* NKScripting.framework */; };
+		E48C6C851D5AAFB500D67B5D /* NKScripting.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E48C6BC71D5A946200D67B5D /* NKScripting.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E48C6CDC1D5CA04200D67B5D /* lib-scripting.nkar in Resources */ = {isa = PBXBuildFile; fileRef = E48C6CDB1D5CA04200D67B5D /* lib-scripting.nkar */; };
+		E48C6CDD1D5CA05400D67B5D /* NKScriptSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CA71D5C9F8900D67B5D /* NKScriptSource.swift */; };
+		E48C6CDE1D5CA05C00D67B5D /* NKAR_BytesReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CAA1D5C9F8900D67B5D /* NKAR_BytesReader.swift */; };
+		E48C6CDF1D5CA05C00D67B5D /* NKAR_CentralDirectory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CAB1D5C9F8900D67B5D /* NKAR_CentralDirectory.swift */; };
+		E48C6CE01D5CA05C00D67B5D /* NKAR_EndRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CAC1D5C9F8900D67B5D /* NKAR_EndRecord.swift */; };
+		E48C6CE11D5CA05C00D67B5D /* NKAR_Uncompressor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CAD1D5C9F8900D67B5D /* NKAR_Uncompressor.swift */; };
+		E48C6CE21D5CA05C00D67B5D /* NKArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CAE1D5C9F8900D67B5D /* NKArchive.swift */; };
+		E48C6CE31D5CA05C00D67B5D /* NKArchiveReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CAF1D5C9F8900D67B5D /* NKArchiveReader.swift */; };
+		E48C6CE41D5CA06100D67B5D /* NKDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CB11D5C9F8900D67B5D /* NKDateFormatter.swift */; };
+		E48C6CE51D5CA06100D67B5D /* NKEventEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CB21D5C9F8900D67B5D /* NKEventEmitter.swift */; };
+		E48C6CE61D5CA06100D67B5D /* NKLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CB31D5C9F8900D67B5D /* NKLogging.swift */; };
+		E48C6CEB1D5CA0F400D67B5D /* NKScriptContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CEA1D5CA0F400D67B5D /* NKScriptContext.swift */; };
+		E48C6CEC1D5CA21B00D67B5D /* NKJSCContextFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CB61D5C9F8900D67B5D /* NKJSCContextFactory.swift */; };
+		E48C6CED1D5CA21B00D67B5D /* NKJSContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CB71D5C9F8900D67B5D /* NKJSContext.swift */; };
+		E48C6CEE1D5CA21B00D67B5D /* NKScriptContextFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CB91D5C9F8900D67B5D /* NKScriptContextFactory.swift */; };
+		E48C6CF21D5CA3A000D67B5D /* app in Resources */ = {isa = PBXBuildFile; fileRef = E48C6CEF1D5CA24600D67B5D /* app */; };
+		E48C6CF31D5CA3A400D67B5D /* appdelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CC41D5C9F8900D67B5D /* appdelegate.swift */; };
+		E48C6CF41D5CA3A700D67B5D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E48C6CC51D5C9F8900D67B5D /* Assets.xcassets */; };
+		E48C6CF51D5CA3AB00D67B5D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CC71D5C9F8900D67B5D /* main.swift */; };
+		E48C6CF61D5CA3AB00D67B5D /* SamplePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CC81D5C9F8900D67B5D /* SamplePlugin.swift */; };
+		E48C6CF71D5CA3C100D67B5D /* scriptdelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CD01D5C9F8900D67B5D /* scriptdelegate.swift */; };
+		E48C6CF91D5CA58C00D67B5D /* NKStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48C6CF81D5CA58C00D67B5D /* NKStorage.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E48C6C861D5AAFB500D67B5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E48C6BBE1D5A946200D67B5D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E48C6BC61D5A946200D67B5D;
+			remoteInfo = NodeKitScriptingCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E48C6C881D5AAFB500D67B5D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E48C6C851D5AAFB500D67B5D /* NKScripting.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		E48C6BC71D5A946200D67B5D /* NKScripting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NKScripting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E48C6C331D5AA27400D67B5D /* libcompression.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcompression.tbd; path = usr/lib/libcompression.tbd; sourceTree = SDKROOT; };
+		E48C6C711D5AAD6300D67B5D /* sample-nkscriptinglite-mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sample-nkscriptinglite-mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E48C6CA71D5C9F8900D67B5D /* NKScriptSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKScriptSource.swift; sourceTree = "<group>"; };
+		E48C6CAA1D5C9F8900D67B5D /* NKAR_BytesReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKAR_BytesReader.swift; sourceTree = "<group>"; };
+		E48C6CAB1D5C9F8900D67B5D /* NKAR_CentralDirectory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKAR_CentralDirectory.swift; sourceTree = "<group>"; };
+		E48C6CAC1D5C9F8900D67B5D /* NKAR_EndRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKAR_EndRecord.swift; sourceTree = "<group>"; };
+		E48C6CAD1D5C9F8900D67B5D /* NKAR_Uncompressor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKAR_Uncompressor.swift; sourceTree = "<group>"; };
+		E48C6CAE1D5C9F8900D67B5D /* NKArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKArchive.swift; sourceTree = "<group>"; };
+		E48C6CAF1D5C9F8900D67B5D /* NKArchiveReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKArchiveReader.swift; sourceTree = "<group>"; };
+		E48C6CB01D5C9F8900D67B5D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E48C6CB11D5C9F8900D67B5D /* NKDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKDateFormatter.swift; sourceTree = "<group>"; };
+		E48C6CB21D5C9F8900D67B5D /* NKEventEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKEventEmitter.swift; sourceTree = "<group>"; };
+		E48C6CB31D5C9F8900D67B5D /* NKLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKLogging.swift; sourceTree = "<group>"; };
+		E48C6CB61D5C9F8900D67B5D /* NKJSCContextFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKJSCContextFactory.swift; sourceTree = "<group>"; };
+		E48C6CB71D5C9F8900D67B5D /* NKJSContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKJSContext.swift; sourceTree = "<group>"; };
+		E48C6CB91D5C9F8900D67B5D /* NKScriptContextFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NKScriptContextFactory.swift; sourceTree = "<group>"; };
+		E48C6CBB1D5C9F8900D67B5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E48C6CC41D5C9F8900D67B5D /* appdelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = appdelegate.swift; sourceTree = "<group>"; };
+		E48C6CC51D5C9F8900D67B5D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E48C6CC61D5C9F8900D67B5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E48C6CC71D5C9F8900D67B5D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		E48C6CC81D5C9F8900D67B5D /* SamplePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePlugin.swift; sourceTree = "<group>"; };
+		E48C6CCA1D5C9F8900D67B5D /* appdelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = appdelegate.swift; sourceTree = "<group>"; };
+		E48C6CCB1D5C9F8900D67B5D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E48C6CCC1D5C9F8900D67B5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E48C6CCD1D5C9F8900D67B5D /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		E48C6CCE1D5C9F8900D67B5D /* SamplePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplePlugin.swift; sourceTree = "<group>"; };
+		E48C6CCF1D5C9F8900D67B5D /* sample-NKScripting.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-NKScripting.entitlements"; sourceTree = "<group>"; };
+		E48C6CD01D5C9F8900D67B5D /* scriptdelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scriptdelegate.swift; sourceTree = "<group>"; };
+		E48C6CD21D5C9F9A00D67B5D /* NKScriptingLite.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NKScriptingLite.podspec; sourceTree = "<group>"; };
+		E48C6CD41D5C9F9A00D67B5D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E48C6CDA1D5CA02200D67B5D /* lib-scripting */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "lib-scripting"; sourceTree = "<group>"; };
+		E48C6CDB1D5CA04200D67B5D /* lib-scripting.nkar */ = {isa = PBXFileReference; lastKnownFileType = file; path = "lib-scripting.nkar"; sourceTree = "<group>"; };
+		E48C6CEA1D5CA0F400D67B5D /* NKScriptContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NKScriptContext.swift; sourceTree = "<group>"; };
+		E48C6CEF1D5CA24600D67B5D /* app */ = {isa = PBXFileReference; lastKnownFileType = folder; path = app; sourceTree = "<group>"; };
+		E48C6CF81D5CA58C00D67B5D /* NKStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NKStorage.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E48C6BC31D5A946200D67B5D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E48C6C341D5AA27400D67B5D /* libcompression.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E48C6C6E1D5AAD6300D67B5D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E48C6C841D5AAFB500D67B5D /* NKScripting.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E48C6BBD1D5A946200D67B5D = {
+			isa = PBXGroup;
+			children = (
+				E48C6CD21D5C9F9A00D67B5D /* NKScriptingLite.podspec */,
+				E48C6CD41D5C9F9A00D67B5D /* README.md */,
+				E48C6C9D1D5C9F8800D67B5D /* src */,
+				E48C6CD91D5C9FB300D67B5D /* platformsupport */,
+				E48C6BC81D5A946200D67B5D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E48C6BC81D5A946200D67B5D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6BC71D5A946200D67B5D /* NKScripting.framework */,
+				E48C6C711D5AAD6300D67B5D /* sample-nkscriptinglite-mac.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E48C6C9D1D5C9F8800D67B5D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6C9E1D5C9F8800D67B5D /* nodekit */,
+				E48C6CBC1D5C9F8900D67B5D /* samples */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E48C6C9E1D5C9F8800D67B5D /* nodekit */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CA11D5C9F8900D67B5D /* NKScripting */,
+				E48C6CB51D5C9F8900D67B5D /* NKScriptingLite */,
+				E48C6CBA1D5C9F8900D67B5D /* platform */,
+			);
+			path = nodekit;
+			sourceTree = "<group>";
+		};
+		E48C6CA11D5C9F8900D67B5D /* NKScripting */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CDA1D5CA02200D67B5D /* lib-scripting */,
+				E48C6CDB1D5CA04200D67B5D /* lib-scripting.nkar */,
+				E48C6CA71D5C9F8900D67B5D /* NKScriptSource.swift */,
+				E48C6CA81D5C9F8900D67B5D /* util */,
+			);
+			path = NKScripting;
+			sourceTree = "<group>";
+		};
+		E48C6CA81D5C9F8900D67B5D /* util */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CA91D5C9F8900D67B5D /* NKArchive */,
+				E48C6CB11D5C9F8900D67B5D /* NKDateFormatter.swift */,
+				E48C6CB21D5C9F8900D67B5D /* NKEventEmitter.swift */,
+				E48C6CB31D5C9F8900D67B5D /* NKLogging.swift */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		E48C6CA91D5C9F8900D67B5D /* NKArchive */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CAA1D5C9F8900D67B5D /* NKAR_BytesReader.swift */,
+				E48C6CAB1D5C9F8900D67B5D /* NKAR_CentralDirectory.swift */,
+				E48C6CAC1D5C9F8900D67B5D /* NKAR_EndRecord.swift */,
+				E48C6CAD1D5C9F8900D67B5D /* NKAR_Uncompressor.swift */,
+				E48C6CAE1D5C9F8900D67B5D /* NKArchive.swift */,
+				E48C6CAF1D5C9F8900D67B5D /* NKArchiveReader.swift */,
+				E48C6CB01D5C9F8900D67B5D /* README.md */,
+			);
+			path = NKArchive;
+			sourceTree = "<group>";
+		};
+		E48C6CB51D5C9F8900D67B5D /* NKScriptingLite */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CF81D5CA58C00D67B5D /* NKStorage.swift */,
+				E48C6CEA1D5CA0F400D67B5D /* NKScriptContext.swift */,
+				E48C6CB91D5C9F8900D67B5D /* NKScriptContextFactory.swift */,
+				E48C6CB61D5C9F8900D67B5D /* NKJSCContextFactory.swift */,
+				E48C6CB71D5C9F8900D67B5D /* NKJSContext.swift */,
+			);
+			path = NKScriptingLite;
+			sourceTree = "<group>";
+		};
+		E48C6CBA1D5C9F8900D67B5D /* platform */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CBB1D5C9F8900D67B5D /* Info.plist */,
+			);
+			path = platform;
+			sourceTree = "<group>";
+		};
+		E48C6CBC1D5C9F8900D67B5D /* samples */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CBD1D5C9F8900D67B5D /* sample-NKScripting */,
+			);
+			path = samples;
+			sourceTree = "<group>";
+		};
+		E48C6CBD1D5C9F8900D67B5D /* sample-NKScripting */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CEF1D5CA24600D67B5D /* app */,
+				E48C6CC31D5C9F8900D67B5D /* platform-darwin */,
+				E48C6CC91D5C9F8900D67B5D /* platform-ios */,
+				E48C6CCF1D5C9F8900D67B5D /* sample-NKScripting.entitlements */,
+				E48C6CD01D5C9F8900D67B5D /* scriptdelegate.swift */,
+			);
+			path = "sample-NKScripting";
+			sourceTree = "<group>";
+		};
+		E48C6CC31D5C9F8900D67B5D /* platform-darwin */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CC41D5C9F8900D67B5D /* appdelegate.swift */,
+				E48C6CC51D5C9F8900D67B5D /* Assets.xcassets */,
+				E48C6CC61D5C9F8900D67B5D /* Info.plist */,
+				E48C6CC71D5C9F8900D67B5D /* main.swift */,
+				E48C6CC81D5C9F8900D67B5D /* SamplePlugin.swift */,
+			);
+			path = "platform-darwin";
+			sourceTree = "<group>";
+		};
+		E48C6CC91D5C9F8900D67B5D /* platform-ios */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6CCA1D5C9F8900D67B5D /* appdelegate.swift */,
+				E48C6CCB1D5C9F8900D67B5D /* Assets.xcassets */,
+				E48C6CCC1D5C9F8900D67B5D /* Info.plist */,
+				E48C6CCD1D5C9F8900D67B5D /* Launch Screen.storyboard */,
+				E48C6CCE1D5C9F8900D67B5D /* SamplePlugin.swift */,
+			);
+			path = "platform-ios";
+			sourceTree = "<group>";
+		};
+		E48C6CD91D5C9FB300D67B5D /* platformsupport */ = {
+			isa = PBXGroup;
+			children = (
+				E48C6C331D5AA27400D67B5D /* libcompression.tbd */,
+			);
+			name = platformsupport;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E48C6BC41D5A946200D67B5D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E48C6BC61D5A946200D67B5D /* NKScriptingLite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E48C6BCF1D5A946200D67B5D /* Build configuration list for PBXNativeTarget "NKScriptingLite" */;
+			buildPhases = (
+				E48C6CF11D5CA34300D67B5D /* Run Script */,
+				E48C6BC21D5A946200D67B5D /* Sources */,
+				E48C6BC31D5A946200D67B5D /* Frameworks */,
+				E48C6BC41D5A946200D67B5D /* Headers */,
+				E48C6BC51D5A946200D67B5D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NKScriptingLite;
+			productName = NodeKitScriptingCore;
+			productReference = E48C6BC71D5A946200D67B5D /* NKScripting.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E48C6C701D5AAD6300D67B5D /* sample-nkscriptinglite-mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E48C6C7B1D5AAD6300D67B5D /* Build configuration list for PBXNativeTarget "sample-nkscriptinglite-mac" */;
+			buildPhases = (
+				E48C6C6D1D5AAD6300D67B5D /* Sources */,
+				E48C6C6E1D5AAD6300D67B5D /* Frameworks */,
+				E48C6C6F1D5AAD6300D67B5D /* Resources */,
+				E48C6C881D5AAFB500D67B5D /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E48C6C871D5AAFB500D67B5D /* PBXTargetDependency */,
+			);
+			name = "sample-nkscriptinglite-mac";
+			productName = "sample-nkscriptingcore-mac";
+			productReference = E48C6C711D5AAD6300D67B5D /* sample-nkscriptinglite-mac.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E48C6BBE1D5A946200D67B5D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "OffGrid Networks";
+				TargetAttributes = {
+					E48C6BC61D5A946200D67B5D = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					E48C6C701D5AAD6300D67B5D = {
+						CreatedOnToolsVersion = 7.3.1;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = E48C6BC11D5A946200D67B5D /* Build configuration list for PBXProject "NodeKitLite" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E48C6BBD1D5A946200D67B5D;
+			productRefGroup = E48C6BC81D5A946200D67B5D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E48C6BC61D5A946200D67B5D /* NKScriptingLite */,
+				E48C6C701D5AAD6300D67B5D /* sample-nkscriptinglite-mac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E48C6BC51D5A946200D67B5D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E48C6CDC1D5CA04200D67B5D /* lib-scripting.nkar in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E48C6C6F1D5AAD6300D67B5D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E48C6CF41D5CA3A700D67B5D /* Assets.xcassets in Resources */,
+				E48C6CF21D5CA3A000D67B5D /* app in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E48C6CF11D5CA34300D67B5D /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd $SRCROOT/src/nodekit/NKScripting\nrm -f lib-scripting.nkar\nzip -r lib-scripting.nkar lib-scripting";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E48C6BC21D5A946200D67B5D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E48C6CE61D5CA06100D67B5D /* NKLogging.swift in Sources */,
+				E48C6CE01D5CA05C00D67B5D /* NKAR_EndRecord.swift in Sources */,
+				E48C6CDE1D5CA05C00D67B5D /* NKAR_BytesReader.swift in Sources */,
+				E48C6CEB1D5CA0F400D67B5D /* NKScriptContext.swift in Sources */,
+				E48C6CEE1D5CA21B00D67B5D /* NKScriptContextFactory.swift in Sources */,
+				E48C6CF91D5CA58C00D67B5D /* NKStorage.swift in Sources */,
+				E48C6CEC1D5CA21B00D67B5D /* NKJSCContextFactory.swift in Sources */,
+				E48C6CE51D5CA06100D67B5D /* NKEventEmitter.swift in Sources */,
+				E48C6CDF1D5CA05C00D67B5D /* NKAR_CentralDirectory.swift in Sources */,
+				E48C6CE41D5CA06100D67B5D /* NKDateFormatter.swift in Sources */,
+				E48C6CED1D5CA21B00D67B5D /* NKJSContext.swift in Sources */,
+				E48C6CE11D5CA05C00D67B5D /* NKAR_Uncompressor.swift in Sources */,
+				E48C6CDD1D5CA05400D67B5D /* NKScriptSource.swift in Sources */,
+				E48C6CE31D5CA05C00D67B5D /* NKArchiveReader.swift in Sources */,
+				E48C6CE21D5CA05C00D67B5D /* NKArchive.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E48C6C6D1D5AAD6300D67B5D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E48C6CF51D5CA3AB00D67B5D /* main.swift in Sources */,
+				E48C6CF31D5CA3A400D67B5D /* appdelegate.swift in Sources */,
+				E48C6CF61D5CA3AB00D67B5D /* SamplePlugin.swift in Sources */,
+				E48C6CF71D5CA3C100D67B5D /* scriptdelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E48C6C871D5AAFB500D67B5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E48C6BC61D5A946200D67B5D /* NKScriptingLite */;
+			targetProxy = E48C6C861D5AAFB500D67B5D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		E48C6BCD1D5A946200D67B5D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E48C6BCE1D5A946200D67B5D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E48C6BD01D5A946200D67B5D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "$(SRCROOT)/src/nodekit/platform/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.nodekit.NKScriptingLite;
+				PRODUCT_NAME = NKScripting;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VALID_ARCHS = " arm64 armv7 armv7s i386 x86_64";
+			};
+			name = Debug;
+		};
+		E48C6BD11D5A946200D67B5D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "$(SRCROOT)/src/nodekit/platform/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.nodekit.NKScriptingLite;
+				PRODUCT_NAME = NKScripting;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
+				VALID_ARCHS = " arm64 armv7 armv7s i386 x86_64";
+			};
+			name = Release;
+		};
+		E48C6C7C1D5AAD6300D67B5D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "src/samples/sample-NKScripting/sample-NKScripting.entitlements";
+				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/src/samples/sample-NKScripting/platform-darwin/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "io.nodekit.sample-nkscriptinglite-mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		E48C6C7D1D5AAD6300D67B5D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "src/samples/sample-NKScripting/sample-NKScripting.entitlements";
+				COMBINE_HIDPI_IMAGES = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				INFOPLIST_FILE = "$(SRCROOT)/src/samples/sample-NKScripting/platform-darwin/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "io.nodekit.sample-nkscriptinglite-mac";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E48C6BC11D5A946200D67B5D /* Build configuration list for PBXProject "NodeKitLite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E48C6BCD1D5A946200D67B5D /* Debug */,
+				E48C6BCE1D5A946200D67B5D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E48C6BCF1D5A946200D67B5D /* Build configuration list for PBXNativeTarget "NKScriptingLite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E48C6BD01D5A946200D67B5D /* Debug */,
+				E48C6BD11D5A946200D67B5D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E48C6C7B1D5AAD6300D67B5D /* Build configuration list for PBXNativeTarget "sample-nkscriptinglite-mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E48C6C7C1D5AAD6300D67B5D /* Debug */,
+				E48C6C7D1D5AAD6300D67B5D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E48C6BBE1D5A946200D67B5D /* Project object */;
+}
