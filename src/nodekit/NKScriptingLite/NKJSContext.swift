@@ -188,5 +188,20 @@ extension NKJSContext: NKScriptContext {
         })
         
         jsv.setObject(object, forKeyedSubscript: lastItem)
+        
+        let selfjsv = jsv.objectForKeyedSubscript(lastItem) as JSValue
+        
+        objc_setAssociatedObject(object, unsafeAddressOf(JSValue), selfjsv, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        
     }
+}
+
+public extension NSObject {
+    
+    var NKscriptObject: JSValue? {
+        
+        return objc_getAssociatedObject(self, unsafeAddressOf(JSValue)) as? JSValue
+        
+    }
+    
 }
