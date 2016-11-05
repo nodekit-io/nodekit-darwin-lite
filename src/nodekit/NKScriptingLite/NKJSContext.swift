@@ -58,6 +58,14 @@ public class NKJSContext: NSObject {
         self.injectJavaScript(NKScriptSource(source: source2, asFilename: "io.nodekit.scripting/NKScripting/promise.js", namespace: "Promise"))
         
         NKStorage.attachTo(self)
+        
+        let setTimeout: @convention(block) (JSValue, Int) -> () =
+            { callback, timeout in
+                let timeVal = Int64(timeout)
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeVal), dispatch_get_main_queue(), { callback.callWithArguments(nil)})
+        }
+        
+        self._jsContext.setObject(unsafeBitCast(setTimeout, AnyObject.self), forKeyedSubscript: "setTimeout")
     }
 }
 
