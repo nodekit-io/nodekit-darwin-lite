@@ -201,7 +201,7 @@ BootstrapModule.loadFromSource = function(id, source) {
     
     var module = new BootstrapModule(id);
     
-    var source = BootstrapModule.wrap(this.source);
+    var source = BootstrapModule.wrap(source);
     
     var fn = BootstrapModule.runInThisContext(source, { filename: module.__filename , displayErrors: true});
     
