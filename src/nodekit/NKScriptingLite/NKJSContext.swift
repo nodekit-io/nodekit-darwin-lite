@@ -34,10 +34,22 @@ public class NKJSContext: NSObject {
     
     internal func prepareEnvironment() -> Void {
         
-        let logjs: @convention(block) (String) -> () = { body in
+        let logjs: @convention(block) (String, String, Dictionary<String, String> ) -> () = { body, severity, label in
             
-            NKLogging.log(body)
+            NKLogging.log(body, level: NKLogging.Level(description: severity), label: label);
             
+        }
+        
+        _jsContext.exceptionHandler =  { (ctx: JSContext!, value: JSValue!) in
+            // type of String
+            let stacktrace = value.objectForKeyedSubscript("stack").toString()
+            // type of Number
+            let lineNumber = value.objectForKeyedSubscript("line")
+            // type of Number
+            let column = value.objectForKeyedSubscript("column")
+            let moreInfo = "in method \(stacktrace)Line number in file: \(lineNumber), column: \(column)"
+            
+            NKLogging.log("JavaScript Error: \(value) \(moreInfo)")
         }
         
         let scriptingBridge = JSValue(newObjectInContext: _jsContext)

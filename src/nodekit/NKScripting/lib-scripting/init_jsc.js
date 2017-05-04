@@ -24,4 +24,12 @@ process.type = "main"
 process.versions = {}
 
 this.console = this.console || function () { };
-console.log = NKScriptingBridge.log;
+
+console.log = function(msg, label) { NKScriptingBridge.log(msg, "Info", label || {} ) };
+console.log.debug = function(msg, label) { NKScriptingBridge.log(msg, "Debug", label || {}) };
+console.log.info = function(msg, label) { NKScriptingBridge.log(msg, "Info", label || {}) };
+console.log.notice = function(msg, label) { NKScriptingBridge.log(msg, "Notice", label || {}) };
+console.log.warning = function(msg, label) { NKScriptingBridge.log(msg, "Warning", label || {}) };
+console.log.error = function(msg, label) { NKScriptingBridge.log(msg, "Error", label || {}) };
+console.log.critical = function(msg, label) { NKScriptingBridge.log(msg, "Critical", label || {}) };
+console.log.emergency = function(msg, label) { NKScriptingBridge.log(msg, "Emergency", label || {}) };
