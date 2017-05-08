@@ -34,10 +34,23 @@ public class NKJSContext: NSObject {
     
     internal func prepareEnvironment() -> Void {
         
-        let logjs: @convention(block) (String, String, Dictionary<String, String> ) -> () = { body, severity, label in
+        
+        let logjs: @convention(block) (String, String, [String: AnyObject] ) -> () = { body, severity, labels in
+    
+            NKLogging.log(body, level: NKLogging.Level(description: severity), labels: labels);
+        }
+        
+        _jsContext.exceptionHandler =  { (ctx: JSContext!, value: JSValue!) in
+            NKLogging.log("JavaScript Error");
+            // type of String
+            let stacktrace = value.objectForKeyedSubscript("stack").toString()
+            // type of Number
+            let lineNumber = value.objectForKeyedSubscript("line")
+            // type of Number
+            let column = value.objectForKeyedSubscript("column")
+            let moreInfo = "in method \(stacktrace)Line number in file: \(lineNumber), column: \(column)"
             
-            NKLogging.log(body, level: NKLogging.Level(description: severity), label: label);
-            
+            NKLogging.log("JavaScript Error: \(value) \(moreInfo)")
         }
         
         _jsContext.exceptionHandler =  { (ctx: JSContext!, value: JSValue!) in
@@ -56,6 +69,14 @@ public class NKJSContext: NSObject {
         
         scriptingBridge.setObject(unsafeBitCast(logjs, AnyObject.self), forKeyedSubscript: "log")
         _jsContext.setObject(unsafeBitCast(scriptingBridge, AnyObject.self), forKeyedSubscript: "NKScriptingBridge")
+
+        let setTimeout: @convention(block) (JSValue, Int) -> () =
+            { callback, timeout in
+                let timeVal = Int64(Double(timeout) * Double(NSEC_PER_MSEC))
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeVal), dispatch_get_main_queue(), { callback.callWithArguments(nil)})
+        }
+        
+        self._jsContext.setObject(unsafeBitCast(setTimeout, AnyObject.self), forKeyedSubscript: "setTimeout")
         
         let appjs = NKStorage.getResource("lib-scripting.nkar/lib-scripting/init_jsc.js", NKJSContext.self)
         
@@ -71,13 +92,7 @@ public class NKJSContext: NSObject {
         
         NKStorage.attachTo(self)
         
-        let setTimeout: @convention(block) (JSValue, Int) -> () =
-            { callback, timeout in
-                let timeVal = Int64(Double(timeout) * Double(NSEC_PER_MSEC))
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeVal), dispatch_get_main_queue(), { callback.callWithArguments(nil)})
-        }
-        
-        self._jsContext.setObject(unsafeBitCast(setTimeout, AnyObject.self), forKeyedSubscript: "setTimeout")
+
     }
 }
 

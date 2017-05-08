@@ -38,10 +38,10 @@ public class NKLogging {
     
     private static var logger = NKLogging(facility: "io.nodekit.core.consolelog", emitter: NKEventEmitter.global)
     
-    public class func log(message: String, level: Level? = nil, label: [String:String]? = [:]) {
+    public class func log(message: String, level: Level? = nil, labels: [String:AnyObject]? = [:]) {
         
         
-       logger.log(message, level: level, label: label)
+       logger.log(message, level: level, labels: labels)
         
         print(message)
         
@@ -144,7 +144,7 @@ public class NKLogging {
         
         public let level: Level
         
-        public let label: [String: String]
+        public let labels: [String: AnyObject]
         
         public let timestamp: NSDate
         
@@ -208,27 +208,27 @@ public class NKLogging {
         
     }
     
-    public func log(message: String, level: Level, label: [String:String]) {
+    public func log(message: String, level: Level, labels: [String:AnyObject]) {
         
         pthread_mutex_lock(&lock)
         
         asl_vlog(client, nil, level.rawValue, message, getVaList([]))
         
         emitters.forEach { (emitter) in
-            emitter.emit("log", Entry(message: message, level: level, label: label, timestamp: NSDate()) )
+            emitter.emit("log", Entry(message: message, level: level, labels: labels, timestamp: NSDate()) )
         }
         
         pthread_mutex_unlock(&lock)
         
     }
     
-    public func log(message: String, level: Level? = nil, label: [String:String]? = nil) {
+    public func log(message: String, level: Level? = nil, labels: [String:AnyObject]? = nil) {
                 
         var msg = message
         
         var lvl = level ?? .Debug
         
-        var label = label ?? [:]
+        let labels = labels ?? [:]
         
         if level == nil, let ch = msg.characters.first, l = Level(symbol: ch) {
             
@@ -238,7 +238,7 @@ public class NKLogging {
             
         }
  
-        log(msg, level: lvl, label: label)
+        log(msg, level: lvl, labels: labels)
         
     }
     
