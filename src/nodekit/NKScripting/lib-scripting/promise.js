@@ -195,7 +195,7 @@
 
   Promise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
     if (typeof console !== 'undefined' && console) {
-      let moreInfo = " in method " + err.stack
+      var moreInfo = " in method " + err.stack
       console.error('Unhandled Promise Rejection:' + err.toString() + moreInfo);
     }
   };
@@ -251,7 +251,7 @@
   };
 
   InstrumentedPromise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
-    let moreInfo = " in method " + err.stack
+    var moreInfo = " in method " + err.stack
     console.error('Unhandled Promise Rejection:' + err.toString() + moreInfo);
   }
 

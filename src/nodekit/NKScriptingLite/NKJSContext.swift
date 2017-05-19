@@ -48,7 +48,7 @@ public class NKJSContext: NSObject {
             let lineNumber = value.objectForKeyedSubscript("line")
             // type of Number
             let column = value.objectForKeyedSubscript("column")
-            let moreInfo = "in method \(stacktrace)Line number in file: \(lineNumber), column: \(column)"
+            let moreInfo = "in method \(stacktrace) Line number: \(lineNumber), column: \(column)"
             
             NKLogging.log("JavaScript Error: \(value) \(moreInfo)")
         }
@@ -60,7 +60,7 @@ public class NKJSContext: NSObject {
             let lineNumber = value.objectForKeyedSubscript("line")
             // type of Number
             let column = value.objectForKeyedSubscript("column")
-            let moreInfo = "in method \(stacktrace)Line number in file: \(lineNumber), column: \(column)"
+            let moreInfo = "in method \(stacktrace) Line number: \(lineNumber), column: \(column)"
             
             NKLogging.log("JavaScript Error: \(value) \(moreInfo)")
         }
