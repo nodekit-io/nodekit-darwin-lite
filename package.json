@@ -1,10 +1,11 @@
 {
   "name": "nodekit-darwin-lite",
-  "version": "0.8.8",
+  "version": "0.8.10",
   "description": "The universal, open-source, embedded engine that provides a full Node.js instance inside desktop and mobile applications for OS X, iOS, Android, and Windows.",
   "main": "index.js",
   "scripts": {
-    "publish": "git push --delete origin v0.8.1 && git tag -d v0.8.1 && git add . -A && git commit -m \"v0.8.1\" && git tag -a v0.8.1 -m \"v0.8.1\" && git push origin master --tags "
+    "publish": "git add . -A && git commit -m \"v0.8.10\" && git tag -a v0.8.10 -m \"v0.8.10\" && git push origin master --tags ",
+    "push": "pod trunk push --allow-warnings"
   },
   "repository": {
     "type": "git",
