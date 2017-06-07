@@ -200,7 +200,6 @@ public class NKStorage: NSObject {
         
     }
 
-
     
     private class func getDataNKAR_(module: String, _ t: AnyClass? = nil) -> NSData? {
         
@@ -253,30 +252,32 @@ public class NKStorage: NSObject {
             
         }
         
-        var path = mainBundle.pathForResource(fileName, ofType: fileExtension, inDirectory: directory)
+        var path: String?;
         
-        if (path == nil) {
+        for _searchPath in self.searchPaths {
             
-            for _nodeKitBundle in bundles {
-                
-                path = _nodeKitBundle.pathForResource(fileName, ofType: fileExtension, inDirectory: directory)
-                
-                if !(path == nil) { break; }
-                
-            }
+            path = ((_searchPath as NSString).stringByAppendingPathComponent(directory) as NSString).stringByAppendingPathComponent(fileName + "." + fileExtension)
+            
+            if fileManager.fileExistsAtPath(path!)
+            { break; }
+            
+            path = nil
+            
         }
         
         if (path == nil) {
             
-            for _searchPath in self.searchPaths {
+            var path = mainBundle.pathForResource(fileName, ofType: fileExtension, inDirectory: directory)
+            
+            if (path == nil) {
                 
-                path = ((_searchPath as NSString).stringByAppendingPathComponent(directory) as NSString).stringByAppendingPathComponent(fileName + "." + fileExtension)
-                
-                if fileManager.fileExistsAtPath(path!)
-                { break; }
-                
-                path = nil
-                
+                for _nodeKitBundle in bundles {
+                    
+                    path = _nodeKitBundle.pathForResource(fileName, ofType: fileExtension, inDirectory: directory)
+                    
+                    if !(path == nil) { break; }
+                    
+                }
             }
         }
         

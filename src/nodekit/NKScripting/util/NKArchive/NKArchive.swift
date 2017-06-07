@@ -26,6 +26,12 @@ public class NKArchive {
     
     var _cdirs: [String: NKAR_CentralDirectory]
     
+    public var keys: [String] {
+        get {
+            return Array(_cdirs.keys)
+        }
+    }
+    
     init(path: String, _cdirs: [String: NKAR_CentralDirectory]) {
         
         self.path = path
@@ -53,6 +59,24 @@ public class NKArchive {
             else { return nil }
         
         return (NKArchive(path: path, _cdirs: _cdirs), data)
+        
+    }
+    
+    public static func createFromData(path: String, data: NSData) -> NKArchive? {
+        
+        let bytes = unsafeBitCast(data.bytes, UnsafePointer<UInt8>.self)
+        
+        let len = data.length
+        
+        guard let _endrec = NKAR_EndRecord.findEndRecordInBytes(bytes, length: len)
+            
+            else { return nil }
+        
+        guard let _cdirs = NKAR_CentralDirectory.findCentralDirectoriesInBytes(bytes, length: len, withEndRecord: _endrec)
+            
+            else { return nil }
+        
+        return NKArchive(path: path, _cdirs: _cdirs)
         
     }
     
