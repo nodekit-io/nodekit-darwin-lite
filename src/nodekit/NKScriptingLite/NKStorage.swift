@@ -267,7 +267,7 @@ public class NKStorage: NSObject {
         
         if (path == nil) {
             
-            var path = mainBundle.pathForResource(fileName, ofType: fileExtension, inDirectory: directory)
+            path = mainBundle.pathForResource(fileName, ofType: fileExtension, inDirectory: directory)
             
             if (path == nil) {
                 
