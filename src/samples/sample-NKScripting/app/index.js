@@ -20,3 +20,7 @@ io.nodekit.test.logconsole("STARTING SAMPLE SCRIPTING APPLICATION");
 var subIndex = require("./subdirectory");
 
 io.nodekit.test.logconsole("subdirectory/index.js: " + subIndex);
+
+var functionExport = require("./function_export");
+
+functionExport()
