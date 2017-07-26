@@ -121,7 +121,7 @@ BootstrapModule.prototype.require = function(id)
     
     var cached;
     
-    var isPossibleDirectoryRequire = id.indexOf('index.js') == -1;
+    var isPossibleDirectoryRequire = id.indexOf('.js') == -1;
     var directoryIndexId = id + '/index.js';
     
     if (isPossibleDirectoryRequire) {
@@ -146,8 +146,9 @@ BootstrapModule.prototype.require = function(id)
     
     bootstrapModule.load();
     
-    if (Object.keys(bootstrapModule.exports).length == 0 && isPossibleDirectoryRequire) {
-        
+    var emptyExport = typeof bootstrapModule.exports != 'function' && Object.keys(bootstrapModule.exports) == 0
+
+    if (emptyExport && isPossibleDirectoryRequire) {
         return BootstrapModule.require(directoryIndexId)
     }
     

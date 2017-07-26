@@ -47,7 +47,7 @@ class SamplePlugin: NSObject, SamplePluginProtocol {
         let myPopup: NSAlert = NSAlert()
         myPopup.messageText = message ?? "NodeKit"
         myPopup.informativeText = title ?? ""
-        myPopup.alertStyle = .Warning
+        myPopup.alertStyle = .WarningAlertStyle
         myPopup.addButtonWithTitle("OK")
         myPopup.runModal()
     }
