@@ -82,9 +82,10 @@ import JavaScriptCore
         return uuid
     }
     
-    func callJsCallback(userInfo: [String: AnyObject]) {
+    func callJsCallback(timer: NSTimer) {
         
-        guard let uuid = userInfo["uuid"] as? String,
+        guard let userInfo = timer.userInfo,
+              let uuid = userInfo["uuid"] as? String,
               let callback = callbacks[uuid],
               let repeats = userInfo["repeats"] as? NSNumber else {
                 
