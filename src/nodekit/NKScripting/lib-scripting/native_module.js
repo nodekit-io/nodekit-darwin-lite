@@ -147,9 +147,8 @@ BootstrapModule.prototype.require = function(id)
     bootstrapModule.load();
     
     var emptyExport = typeof bootstrapModule.exports != 'function' && Object.keys(bootstrapModule.exports) == 0
-    
+
     if (emptyExport && isPossibleDirectoryRequire) {
-        
         return BootstrapModule.require(directoryIndexId)
     }
     
