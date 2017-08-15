@@ -99,10 +99,5 @@ import JavaScriptCore
             clearTimeout(uuid)
         }
     }
-    
-    deinit {
-        
-        print("dead")
-    }
 }
 
