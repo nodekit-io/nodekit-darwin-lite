@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E1F99B01F27D86F0067F271 /* NKJSTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1F99AF1F27D86F0067F271 /* NKJSTimer.swift */; };
 		E48C6C341D5AA27400D67B5D /* libcompression.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E48C6C331D5AA27400D67B5D /* libcompression.tbd */; };
 		E48C6C841D5AAFB500D67B5D /* NKScripting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E48C6BC71D5A946200D67B5D /* NKScripting.framework */; };
 		E48C6C851D5AAFB500D67B5D /* NKScripting.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E48C6BC71D5A946200D67B5D /* NKScripting.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -59,6 +60,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8E1F99AF1F27D86F0067F271 /* NKJSTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NKJSTimer.swift; sourceTree = "<group>"; };
 		E48C6BC71D5A946200D67B5D /* NKScripting.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NKScripting.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E48C6C331D5AA27400D67B5D /* libcompression.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcompression.tbd; path = usr/lib/libcompression.tbd; sourceTree = SDKROOT; };
 		E48C6C711D5AAD6300D67B5D /* sample-nkscriptinglite-mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sample-nkscriptinglite-mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,6 +130,7 @@
 				E48C6BC81D5A946200D67B5D /* Products */,
 			);
 			sourceTree = "<group>";
+			tabWidth = 5;
 		};
 		E48C6BC81D5A946200D67B5D /* Products */ = {
 			isa = PBXGroup;
@@ -201,6 +204,7 @@
 				E48C6CB91D5C9F8900D67B5D /* NKScriptContextFactory.swift */,
 				E48C6CB61D5C9F8900D67B5D /* NKJSCContextFactory.swift */,
 				E48C6CB71D5C9F8900D67B5D /* NKJSContext.swift */,
+				8E1F99AF1F27D86F0067F271 /* NKJSTimer.swift */,
 			);
 			path = NKScriptingLite;
 			sourceTree = "<group>";
@@ -401,6 +405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E48C6CE61D5CA06100D67B5D /* NKLogging.swift in Sources */,
+				8E1F99B01F27D86F0067F271 /* NKJSTimer.swift in Sources */,
 				E48C6CE01D5CA05C00D67B5D /* NKAR_EndRecord.swift in Sources */,
 				E48C6CDE1D5CA05C00D67B5D /* NKAR_BytesReader.swift in Sources */,
 				E48C6CEB1D5CA0F400D67B5D /* NKScriptContext.swift in Sources */,

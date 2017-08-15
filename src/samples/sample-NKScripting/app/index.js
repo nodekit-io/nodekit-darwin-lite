@@ -24,3 +24,9 @@ io.nodekit.test.logconsole("subdirectory/index.js: " + subIndex);
 var functionExport = require("./function_export");
 
 functionExport()
+
+setInterval(function() {
+            
+    io.nodekit.test.logconsole("interval fire");
+            
+}, 2000)
