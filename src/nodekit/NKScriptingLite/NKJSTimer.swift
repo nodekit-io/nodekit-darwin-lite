@@ -37,6 +37,11 @@ import JavaScriptCore
     var timers = [String: NSTimer]()
     var callbacks = [String: JSValue]()
     
+    deinit {
+        
+        timers.forEach({$0.1.invalidate()})
+    }
+    
     func clearTimeout(identifier: String) {
         
         let timer = timers.removeValueForKey(identifier)
