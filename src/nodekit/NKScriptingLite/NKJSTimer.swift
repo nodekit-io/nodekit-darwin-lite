@@ -56,6 +56,13 @@ import JavaScriptCore
         return createTimer(callback, milliseconds: milliseconds , repeats: false)
     }
     
+    func invalidateAll() {
+        
+        timers.forEach({$0.1.invalidate()})
+        timers.removeAll()
+        callbacks.removeAll()
+    }
+    
     private func createTimer(callback: JSValue, milliseconds: Double, repeats : Bool) -> String {
         
         let timeInterval  = milliseconds / 1000.0

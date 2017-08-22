@@ -22,6 +22,8 @@ import JavaScriptCore
 
 public class NKJSContext: NSObject {
     
+    private let nodeKitTimerKey = "NodeKitTimer"
+    
     private let _jsContext: JSContext
     private let _id: Int
     
@@ -108,7 +110,7 @@ public class NKJSContext: NSObject {
             )
         )
         
-        self._jsContext.setObject(NKJSTimer(), forKeyedSubscript: "NodeKitTimer")
+        self._jsContext.setObject(NKJSTimer(), forKeyedSubscript: nodeKitTimerKey)
         
         NKStorage.attachTo(self)
     }
@@ -212,6 +214,14 @@ extension NKJSContext: NKScriptContext {
         }
        
         return "'\(obj!.description)'"
+    }
+    
+    public func stop() -> Void {
+        
+        if let timer = _jsContext.objectForKeyedSubscript(nodeKitTimerKey).toObject() as? NKJSTimer {
+            
+            timer.invalidateAll()
+        }
     }
 
     // private methods
