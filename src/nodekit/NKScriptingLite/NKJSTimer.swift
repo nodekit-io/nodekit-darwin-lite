@@ -37,11 +37,6 @@ import JavaScriptCore
     var timers = [String: NSTimer]()
     var callbacks = [String: JSValue]()
     
-    deinit {
-        
-        timers.forEach({$0.1.invalidate()})
-    }
-    
     func clearTimeout(identifier: String) {
         
         let timer = timers.removeValueForKey(identifier)
@@ -59,6 +54,13 @@ import JavaScriptCore
     func setTimeout(callback: JSValue, _ milliseconds: Double) -> String {
         
         return createTimer(callback, milliseconds: milliseconds , repeats: false)
+    }
+    
+    func invalidateAll() {
+        
+        timers.forEach({$0.1.invalidate()})
+        timers.removeAll()
+        callbacks.removeAll()
     }
     
     private func createTimer(callback: JSValue, milliseconds: Double, repeats : Bool) -> String {
