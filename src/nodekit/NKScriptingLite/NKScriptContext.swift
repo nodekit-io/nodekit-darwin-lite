@@ -34,6 +34,8 @@ public protocol NKScriptContext: class {
     
     func serialize(object: AnyObject?) -> String
 
+    func stop() -> Void
+    
 }
 
 public protocol NKScriptContextDelegate: class {
