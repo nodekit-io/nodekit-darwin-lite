@@ -49,7 +49,7 @@ extension NKAR_EndRecord {
     
     static let signature: [UInt8] = [0x06, 0x05, 0x4b, 0x50]
     
-    static func findEndRecordInBytes(bytes: UnsafePointer<UInt8>, length: Int) -> NKAR_EndRecord? {
+    static func findEndRecordInBytes(_ bytes: UnsafePointer<UInt8>, length: Int) -> NKAR_EndRecord? {
         
         var reader = NKAR_BytesReader(bytes: bytes, index: length - 1 - signature.count)
         
@@ -67,7 +67,7 @@ extension NKAR_EndRecord {
                     
                     if reader.byteb() != self.signature[i] { break }
                     
-                    if i == rng.endIndex.predecessor() { reader.skip(1); return true }
+                    if i == (rng.upperBound - 1) { reader.skip(1); return true }
                 }
             }
             

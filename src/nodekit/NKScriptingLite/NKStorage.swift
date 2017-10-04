@@ -23,33 +23,33 @@ import JavaScriptCore
 
 @objc public protocol NKStorageExport: NKScriptExport {
     
-    func getSourceSync(module: String) -> String
+    func getSourceSync(_ module: String) -> String
     
-    func existsSync(module: String) -> Bool
+    func existsSync(_ module: String) -> Bool
     
-    func statSync(module: String) -> Dictionary<String, AnyObject>
+    func statSync(_ module: String) -> Dictionary<String, AnyObject>
     
-    func getDirectorySync(module: String) -> [String]
+    func getDirectorySync(_ module: String) -> [String]
 
 }
 
-public class NKStorage: NSObject {
+open class NKStorage: NSObject {
     
     // PUBLIC METHODS NATIVE SIDE ONLY
     
-    public static var mainBundle = NKStorage.mainBundle_()
+    open static var mainBundle = NKStorage.mainBundle_()
 
-    public class func getResource(module: String, _ t: AnyClass? = nil) -> String? {
+    open class func getResource(_ module: String, _ t: AnyClass? = nil) -> String? {
         
-        if module.lowercaseString.rangeOfString(".nkar/") != nil {
+        if module.lowercased().range(of: ".nkar/") != nil {
             return getNKARResource_(module, t)
         }
         
-        let bundle = (t != nil) ?  NSBundle(forClass: t!) :  NKStorage.mainBundle
+        let bundle = (t != nil) ?  Bundle(for: t!) :  NKStorage.mainBundle
         
         guard let path = getPath_(bundle, module),
             
-            let source = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding) else {
+            let source = try? NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) else {
                 
                 return nil
                 
@@ -59,21 +59,21 @@ public class NKStorage: NSObject {
         
     }
     
-    private static let fileManager = NSFileManager.defaultManager()
+    fileprivate static let fileManager = FileManager.default
     
-    public class func getResourceData(module: String, _ t: AnyClass? = nil) -> NSData? {
+    open class func getResourceData(_ module: String, _ t: AnyClass? = nil) -> Data? {
         
-        if module.lowercaseString.rangeOfString(".nkar/") != nil {
+        if module.lowercased().range(of: ".nkar/") != nil {
             return getDataNKAR_(module, t)
         }
         
-        let bundle = (t != nil) ?  NSBundle(forClass: t!) :  NKStorage.mainBundle
+        let bundle = (t != nil) ?  Bundle(for: t!) :  NKStorage.mainBundle
         
         guard let path = getPath_(bundle, module),
             
-            let data = try? NSData(
-                contentsOfFile: path as String,
-                options: NSDataReadingOptions(rawValue: 0)
+            let data = try? Data(
+                contentsOf: URL(fileURLWithPath: path as String),
+                options: NSData.ReadingOptions(rawValue: 0)
             )
             
             else { return nil }
@@ -82,7 +82,7 @@ public class NKStorage: NSObject {
         
     }
     
-    public class func getPluginWithStub(stub: String, _ module: String, _ t: AnyClass? = nil) -> String {
+    open class func getPluginWithStub(_ stub: String, _ module: String, _ t: AnyClass? = nil) -> String {
         
         guard let appjs = NKStorage.getResource(module, t) else {
             
@@ -93,15 +93,15 @@ public class NKStorage: NSObject {
         return "function loadplugin(){\n" + appjs + "\n}\n" + stub + "\n" + "loadplugin();" + "\n"
     }
     
-    public class func includeBundle(bundle: NSBundle) -> Void {
+    open class func includeBundle(_ bundle: Bundle) -> Void {
         
-       if !bundles.contains({ $0 === bundle })
+       if !bundles.contains(where: { $0 === bundle })
        {
           bundles.append(bundle)
         }
     }
     
-    public class func includeSearchPath(path: String) -> Void {
+    open class func includeSearchPath(_ path: String) -> Void {
         
         if !searchPaths.contains(path)
         {
@@ -109,13 +109,13 @@ public class NKStorage: NSObject {
         }
     }
     
-    public class func exists(module: String, _ t: AnyClass? = nil) -> Bool {
+    open class func exists(_ module: String, _ t: AnyClass? = nil) -> Bool {
         
-        if module.lowercaseString.rangeOfString(".nkar/") != nil {
+        if module.lowercased().range(of: ".nkar/") != nil {
             return existsNKAR_(module, t)
         }
         
-        let bundle = (t != nil) ?  NSBundle(forClass: t!) :  NKStorage.mainBundle
+        let bundle = (t != nil) ?  Bundle(for: t!) :  NKStorage.mainBundle
         
         if (getPath_(bundle, module) != nil) { return true } else { return false}
         
@@ -124,29 +124,29 @@ public class NKStorage: NSObject {
     
     // PRIVATE METHODS
     
-    private static var unzipper_ : NKArchiveReader? = nil
+    fileprivate static var unzipper_ : NKArchiveReader? = nil
     
-    private static var bundles : [NSBundle] = [ NSBundle(forClass: NKStorage.self) ]
+    fileprivate static var bundles : [Bundle] = [ Bundle(for: NKStorage.self) ]
     
-    private static var searchPaths : [String] = [String]()
+    fileprivate static var searchPaths : [String] = [String]()
     
-    private class func getNKARResource_(module: String, _ t: AnyClass? = nil) -> String? {
+    fileprivate class func getNKARResource_(_ module: String, _ t: AnyClass? = nil) -> String? {
             
         guard let data = getDataNKAR_(module, t) else { return nil }
         
-        return NSString(data: data, encoding: NSUTF8StringEncoding) as String?
+        return NSString(data: data, encoding: String.Encoding.utf8.rawValue) as String?
         
     }
     
-    private class func existsNKAR_(module: String, _ t: AnyClass? = nil) -> Bool {
+    fileprivate class func existsNKAR_(_ module: String, _ t: AnyClass? = nil) -> Bool {
         
-        let moduleArr = module.componentsSeparatedByString(".nkar/")
+        let moduleArr = module.components(separatedBy: ".nkar/")
         
         let nkarModule: String = moduleArr[0] + ".nkar"
         
         var resource: String = moduleArr[1]
         
-        let bundle = (t != nil) ?  NSBundle(forClass: t!) :  NKStorage.mainBundle
+        let bundle = (t != nil) ?  Bundle(for: t!) :  NKStorage.mainBundle
         
         unzipper_ = unzipper_ ?? NKArchiveReader.create()
         
@@ -164,15 +164,15 @@ public class NKStorage: NSObject {
         
     }
     
-    private class func statNKAR_(module: String, _ t: AnyClass? = nil) -> Dictionary<String, AnyObject> {
+    fileprivate class func statNKAR_(_ module: String, _ t: AnyClass? = nil) -> Dictionary<String, AnyObject> {
         
-        let moduleArr = module.componentsSeparatedByString(".nkar/")
+        let moduleArr = module.components(separatedBy: ".nkar/")
         
         let nkarModule: String = moduleArr[0] + ".nkar"
         
         let resource: String = moduleArr[1]
         
-        let bundle = (t != nil) ?  NSBundle(forClass: t!) :  NKStorage.mainBundle
+        let bundle = (t != nil) ?  Bundle(for: t!) :  NKStorage.mainBundle
         
         unzipper_ = unzipper_ ?? NKArchiveReader.create()
         
@@ -182,15 +182,15 @@ public class NKStorage: NSObject {
         
     }
     
-    private class func getDirectoryNKAR_(module: String, _ t: AnyClass? = nil) -> [String] {
+    fileprivate class func getDirectoryNKAR_(_ module: String, _ t: AnyClass? = nil) -> [String] {
         
-        let moduleArr = module.componentsSeparatedByString(".nkar/")
+        let moduleArr = module.components(separatedBy: ".nkar/")
         
         let nkarModule: String = moduleArr[0] + ".nkar"
         
         let resource: String = moduleArr[1]
         
-        let bundle = (t != nil) ?  NSBundle(forClass: t!) :  NKStorage.mainBundle
+        let bundle = (t != nil) ?  Bundle(for: t!) :  NKStorage.mainBundle
         
         unzipper_ = unzipper_ ?? NKArchiveReader.create()
         
@@ -201,15 +201,15 @@ public class NKStorage: NSObject {
     }
 
     
-    private class func getDataNKAR_(module: String, _ t: AnyClass? = nil) -> NSData? {
+    fileprivate class func getDataNKAR_(_ module: String, _ t: AnyClass? = nil) -> Data? {
         
-        let moduleArr = module.componentsSeparatedByString(".nkar/")
+        let moduleArr = module.components(separatedBy: ".nkar/")
         
         let nkarModule: String = moduleArr[0] + ".nkar"
         
         var resource: String = moduleArr[1]
         
-        let bundle = (t != nil) ?  NSBundle(forClass: t!) :  NKStorage.mainBundle
+        let bundle = (t != nil) ?  Bundle(for: t!) :  NKStorage.mainBundle
         
         unzipper_ = unzipper_ ?? NKArchiveReader.create()
         
@@ -231,20 +231,20 @@ public class NKStorage: NSObject {
         
     }
     
-    private class func getPath_(mainBundle: NSBundle, _ module: String) -> String? {
+    fileprivate class func getPath_(_ mainBundle: Bundle, _ module: String) -> String? {
      
         if module.hasPrefix("/")
         {
             return module
         }
         
-        let directory = (module as NSString).stringByDeletingLastPathComponent
+        let directory = (module as NSString).deletingLastPathComponent
         
         var fileName = (module as NSString).lastPathComponent
         
         var fileExtension = (fileName as NSString).pathExtension
         
-        fileName = (fileName as NSString).stringByDeletingPathExtension
+        fileName = (fileName as NSString).deletingPathExtension
         
         if (fileExtension=="") {
             
@@ -256,9 +256,9 @@ public class NKStorage: NSObject {
         
         for _searchPath in self.searchPaths {
             
-            path = ((_searchPath as NSString).stringByAppendingPathComponent(directory) as NSString).stringByAppendingPathComponent(fileName + "." + fileExtension)
+            path = ((_searchPath as NSString).appendingPathComponent(directory) as NSString).appendingPathComponent(fileName + "." + fileExtension)
             
-            if fileManager.fileExistsAtPath(path!)
+            if fileManager.fileExists(atPath: path!)
             { break; }
             
             path = nil
@@ -267,13 +267,13 @@ public class NKStorage: NSObject {
         
         if (path == nil) {
             
-            path = mainBundle.pathForResource(fileName, ofType: fileExtension, inDirectory: directory)
+            path = mainBundle.path(forResource: fileName, ofType: fileExtension, inDirectory: directory)
             
             if (path == nil) {
                 
                 for _nodeKitBundle in bundles {
                     
-                    path = _nodeKitBundle.pathForResource(fileName, ofType: fileExtension, inDirectory: directory)
+                    path = _nodeKitBundle.path(forResource: fileName, ofType: fileExtension, inDirectory: directory)
                     
                     if !(path == nil) { break; }
                     
@@ -285,7 +285,7 @@ public class NKStorage: NSObject {
             
             path = module
             
-            if ((path! as NSString).pathComponents.count < 3) || (!NSFileManager.defaultManager().fileExistsAtPath(path!)) {
+            if ((path! as NSString).pathComponents.count < 3) || (!FileManager.default.fileExists(atPath: path!)) {
                 
                 NKLogging.log("!Error - source file not found: \(directory + "/" + fileName + "." + fileExtension)")
                 
@@ -300,41 +300,38 @@ public class NKStorage: NSObject {
     }
 
 
-    private class func mainBundle_() -> NSBundle {
+    fileprivate class func mainBundle_() -> Bundle {
         
         #if swift(>=3)
             
-            var bundle = Bundle.main()
+            var bundle = Bundle.main
             
             if bundle.bundleURL.pathExtension == "appex" {
             
-            // Peel off two directory levels - MY_APP.app/PlugIns/MY_APP_EXTENSION.appex
-            
-            if let url = try? bundle.bundleURL.deletingLastPathComponent().deletingLastPathComponent() {
-            
-                    if let appBundle = Bundle(url: url) {
-            
-                        bundle = appBundle
-            
-                    }
-            
+                // Peel off two directory levels - MY_APP.app/PlugIns/MY_APP_EXTENSION.appex
+                
+                let url = bundle.bundleURL.deletingLastPathComponent().deletingLastPathComponent()
+                
+                if let appBundle = Bundle(url: url) {
+                    
+                    bundle = appBundle
+                    
                 }
-            
             }
             
             return bundle
             
         #else
             
-            var bundle = NSBundle.mainBundle()
+            var bundle = Bundle.main
             
             if bundle.bundleURL.pathExtension == "appex" {
                 
                 // Peel off two directory levels - MY_APP.app/PlugIns/MY_APP_EXTENSION.appex
                 
-                if let url = bundle.bundleURL.URLByDeletingLastPathComponent?.URLByDeletingLastPathComponent {
+                if let url = (bundle.bundleURL as NSURL).URLByDeletingLastPathComponent?.deletingLastPathComponent() {
                     
-                    if let appBundle = NSBundle(URL: url) {
+                    if let appBundle = Bundle(url: url) {
                         
                         bundle = appBundle
                     }
@@ -354,23 +351,23 @@ extension NKStorage:  NKStorageExport {
     
     // PUBLIC METHODS, ACCESSIBLE FROM JAVASCRIPT
     
-   public func getSourceSync(module: String) -> String {
+   public func getSourceSync(_ module: String) -> String {
         
         guard let data = NKStorage.getResourceData(module) else { return "" }
         
-        return (data.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0)))
+        return (data.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0)))
         
     }
     
-   public func existsSync(module: String) -> Bool {
+   public func existsSync(_ module: String) -> Bool {
         
         return NKStorage.exists(module)
         
     }
     
-   public func statSync(module: String) -> Dictionary<String, AnyObject> {
+   public func statSync(_ module: String) -> Dictionary<String, AnyObject> {
         
-        if module.lowercaseString.rangeOfString(".nkar/") != nil {
+        if module.lowercased().range(of: ".nkar/") != nil {
             
             return NKStorage.statNKAR_(module)
             
@@ -384,14 +381,14 @@ extension NKStorage:  NKStorageExport {
             path = module
         } else
         {
-            path = (NKStorage.mainBundle.resourcePath! as NSString).stringByAppendingPathComponent(module)
+            path = (NKStorage.mainBundle.resourcePath! as NSString).appendingPathComponent(module)
         }
         
-        let attr: [String : AnyObject]
+        let attr: [FileAttributeKey : Any]
         
         do {
             
-            attr = try NSFileManager.defaultManager().attributesOfItemAtPath(path)
+            attr = try FileManager.default.attributesOfItem(atPath: path)
             
         } catch _ {
             
@@ -399,37 +396,37 @@ extension NKStorage:  NKStorageExport {
             
         }
         
-        storageItem["birthtime"] = attr[NSFileCreationDate] as! NSDate
+        storageItem["birthtime"] = attr[FileAttributeKey.creationDate] as! NSDate
         
-        storageItem["size"] = attr[NSFileSize] as! NSNumber
+        storageItem["size"] = attr[FileAttributeKey.size] as! NSNumber
         
-        storageItem["mtime"] = attr[NSFileModificationDate] as! NSDate
+        storageItem["mtime"] = attr[FileAttributeKey.modificationDate] as! NSDate
         
-        storageItem["path"] = path as String
+        storageItem["path"] = path as String as NSObject?
         
-        switch attr[NSFileType] as! String {
+        switch attr[FileAttributeKey.type] as! FileAttributeType {
             
-        case NSFileTypeDirectory:
+        case FileAttributeType.typeDirectory:
             
-            storageItem["filetype"] = "Directory"
+            storageItem["filetype"] = "Directory" as NSObject?
             
             break
             
-        case NSFileTypeRegular:
+        case FileAttributeType.typeRegular:
             
-            storageItem["filetype"] = "File"
+            storageItem["filetype"] = "File" as NSObject?
             
             break
             
-        case NSFileTypeSymbolicLink:
+        case FileAttributeType.typeSymbolicLink:
             
-            storageItem["filetype"] = "SymbolicLink"
+            storageItem["filetype"] = "SymbolicLink" as NSObject?
             
             break
             
         default:
             
-            storageItem["filetype"] = "File"
+            storageItem["filetype"] = "File" as NSObject?
             
             break
             
@@ -438,9 +435,9 @@ extension NKStorage:  NKStorageExport {
         return storageItem
     }
     
-   public func getDirectorySync(module: String) -> [String] {
+   public func getDirectorySync(_ module: String) -> [String] {
         
-        if module.lowercaseString.rangeOfString(".nkar/") != nil {
+        if module.lowercased().range(of: ".nkar/") != nil {
             
             return NKStorage.getDirectoryNKAR_(module)
             
@@ -453,19 +450,19 @@ extension NKStorage:  NKStorageExport {
             path = module
         } else
         {
-            path = (NKStorage.mainBundle.resourcePath! as NSString).stringByAppendingPathComponent(module)
+            path = (NKStorage.mainBundle.resourcePath! as NSString).appendingPathComponent(module)
         }
         
-        let dirContents = (try? NSFileManager.defaultManager().contentsOfDirectoryAtPath(path)) ?? [String]()
+        let dirContents = (try? FileManager.default.contentsOfDirectory(atPath: path)) ?? [String]()
         
         return dirContents
         
     }
     
     
-    class func attachTo(context: NKScriptContext) {
+    class func attachTo(_ context: NKScriptContext) {
         
-        context.loadPlugin(NKStorage(), namespace: "io.nodekit.scripting.storage", options: ["js": "lib-scripting.nkar/lib-scripting/native_module.js"])
+        context.loadPlugin(NKStorage(), namespace: "io.nodekit.scripting.storage", options: ["js": "lib-scripting.nkar/lib-scripting/native_module.js" as NSString])
         
     }
     

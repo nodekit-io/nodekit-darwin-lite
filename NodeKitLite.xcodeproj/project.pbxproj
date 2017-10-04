@@ -332,9 +332,11 @@
 				TargetAttributes = {
 					E48C6BC61D5A946200D67B5D = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0820;
 					};
 					E48C6C701D5AAD6300D67B5D = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0820;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -558,7 +560,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				VALID_ARCHS = " arm64 armv7 armv7s i386 x86_64";
 			};
 			name = Debug;
@@ -582,7 +584,7 @@
 				PRODUCT_NAME = NKScripting;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				VALID_ARCHS = " arm64 armv7 armv7s i386 x86_64";
 			};
 			name = Release;
@@ -598,7 +600,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.nodekit.sample-nkscriptinglite-mac";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -613,7 +615,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.nodekit.sample-nkscriptinglite-mac";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

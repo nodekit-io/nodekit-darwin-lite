@@ -24,34 +24,34 @@ import JavaScriptCore
 
 @objc protocol TimerJSExport: JSExport {
     
-    func setTimeout(callback: JSValue, _ milliseconds: Double) -> String
+    func setTimeout(_ callback: JSValue, _ milliseconds: Double) -> String
     
-    func setInterval(callback: JSValue, _ milliseconds: Double) -> String
+    func setInterval(_ callback: JSValue, _ milliseconds: Double) -> String
     
-    func clearTimeout(identifier: String)
+    func clearTimeout(_ identifier: String)
 }
 
 
 @objc class NKJSTimer: NSObject, TimerJSExport {
     
-    var timers = [String: NSTimer]()
+    var timers = [String: Timer]()
     var callbacks = [String: JSValue]()
     
-    func clearTimeout(identifier: String) {
+    func clearTimeout(_ identifier: String) {
         
-        let timer = timers.removeValueForKey(identifier)
+        let timer = timers.removeValue(forKey: identifier)
         
         timer?.invalidate()
         
-        callbacks.removeValueForKey(identifier)
+        callbacks.removeValue(forKey: identifier)
     }
     
-    func setInterval(callback: JSValue, _ milliseconds: Double) -> String {
+    func setInterval(_ callback: JSValue, _ milliseconds: Double) -> String {
         
         return createTimer(callback, milliseconds: milliseconds, repeats: true)
     }
     
-    func setTimeout(callback: JSValue, _ milliseconds: Double) -> String {
+    func setTimeout(_ callback: JSValue, _ milliseconds: Double) -> String {
         
         return createTimer(callback, milliseconds: milliseconds , repeats: false)
     }
@@ -63,22 +63,22 @@ import JavaScriptCore
         callbacks.removeAll()
     }
     
-    private func createTimer(callback: JSValue, milliseconds: Double, repeats : Bool) -> String {
+    fileprivate func createTimer(_ callback: JSValue, milliseconds: Double, repeats : Bool) -> String {
         
         let timeInterval  = milliseconds / 1000.0
         
-        let uuid = NSUUID().UUIDString
+        let uuid = UUID().uuidString
     
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             
             let userInfo: [String: AnyObject] = [
-                "repeats": NSNumber(bool: repeats),
-                "uuid": uuid
+                "repeats": NSNumber(value: repeats as Bool),
+                "uuid": uuid as AnyObject
             ]
             
             self.callbacks[uuid] = callback
             
-            let timer = NSTimer.scheduledTimerWithTimeInterval(timeInterval,
+            let timer = Timer.scheduledTimer(timeInterval: timeInterval,
                                                                target: self,
                                                                selector: #selector(self.callJsCallback),
                                                                userInfo: userInfo,
@@ -89,9 +89,9 @@ import JavaScriptCore
         return uuid
     }
     
-    func callJsCallback(timer: NSTimer) {
+    func callJsCallback(_ timer: Timer) {
         
-        guard let userInfo = timer.userInfo,
+        guard let userInfo = timer.userInfo as? [String: AnyObject],
               let uuid = userInfo["uuid"] as? String,
               let callback = callbacks[uuid],
               let repeats = userInfo["repeats"] as? NSNumber else {
@@ -99,7 +99,7 @@ import JavaScriptCore
             return
         }
         
-        callback.callWithArguments([])
+        callback.call(withArguments: [])
         
         if !repeats.boolValue {
             

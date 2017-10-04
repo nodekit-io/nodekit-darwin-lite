@@ -21,14 +21,14 @@ import NKScripting
 
 class SampleScriptDelegate: NSObject, NKScriptContextDelegate {
     
-    func NKScriptEngineDidLoad(context: NKScriptContext) -> Void {
+    func NKScriptEngineDidLoad(_ context: NKScriptContext) -> Void {
         
         SamplePlugin.attachTo(context)
         
         context.injectJavaScript(NKScriptSource(source: "process.bootstrap('app/index.js');", asFilename: "boot"))
     }
     
-    func NKScriptEngineReady(context: NKScriptContext) -> Void {
+    func NKScriptEngineReady(_ context: NKScriptContext) -> Void {
         
         NKEventEmitter.global.emit("nk.jsApplicationReady", "" as AnyObject)
     }

@@ -21,13 +21,13 @@ import NKScripting
 
 class SampleAppDelegate: NSObject, NSApplicationDelegate {
     
-    private let statusItem: NSStatusItem
+    fileprivate let statusItem: NSStatusItem
     
-    private let scriptContextDelegate : NKScriptContextDelegate
+    fileprivate let scriptContextDelegate : NKScriptContextDelegate
 
      override init() {
         
-        statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(24)
+        statusItem = NSStatusBar.system().statusItem(withLength: 24)
         
         scriptContextDelegate = SampleScriptDelegate()
         
@@ -39,9 +39,9 @@ class SampleAppDelegate: NSObject, NSApplicationDelegate {
         
     }
     
-    func quitApp(sender: AnyObject) {
+    func quitApp(_ sender: AnyObject) {
         
-        NSApplication.sharedApplication().terminate(self)
+        NSApplication.shared().terminate(self)
         
     }
 
@@ -64,10 +64,10 @@ class SampleAppDelegate: NSObject, NSApplicationDelegate {
     }
     
     
-    private func startNodeKitScripting() {
+    fileprivate func startNodeKitScripting() {
         
-        let options = [
-        "Engine":  NKEngineType.JavaScriptCore.rawValue
+        let options: [String: AnyObject] = [
+        "Engine":  NKEngineType.javaScriptCore.rawValue as NSNumber
         ]
         
         NKScriptContextFactory().createScriptContext(options, delegate: self.scriptContextDelegate)

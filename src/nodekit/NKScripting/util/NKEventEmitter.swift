@@ -38,19 +38,19 @@ public protocol NKEventSubscription {
 
 }
 
-public class NKEventSubscriptionGeneric<T>: NKEventSubscription {
+open class NKEventSubscriptionGeneric<T>: NKEventSubscription {
 
    public typealias NKHandler = (T) -> Void
 
     let handler: NKHandler
 
-    private let emitter: NKEventEmitter
+    fileprivate let emitter: NKEventEmitter
 
-    private let eventType: String
+    fileprivate let eventType: String
     
-    private let id: Int
+    fileprivate let id: Int
 
-    public init(emitter: NKEventEmitter, eventType: String,  handler: NKHandler) {
+    public init(emitter: NKEventEmitter, eventType: String,  handler: @escaping NKHandler) {
     
         id = seq
         
@@ -61,27 +61,24 @@ public class NKEventSubscriptionGeneric<T>: NKEventSubscription {
         self.emitter = emitter
         
         self.handler = handler
-    
     }
 
-    public func remove() {
+    open func remove() {
     
-        emitter.subscriptions[eventType]?.removeValueForKey(id)
-    
+        _ = emitter.subscriptions[eventType]?.removeValue(forKey: id)
     }
-
 }
 
-public class NKEventEmitter: NSObject {
+open class NKEventEmitter: NSObject {
 
     // global EventEmitter that is actually a signal emitter (retains early triggers without subscriptions until once is called)
-    public static var global: NKEventEmitter = NKSignalEmitter()
+    open static var global: NKEventEmitter = NKSignalEmitter()
 
-    private var currentSubscription: NKEventSubscription?
+    fileprivate var currentSubscription: NKEventSubscription?
 
-    private var subscriptions: [String: [Int:NKEventSubscription]] = [:]
+    fileprivate var subscriptions: [String: [Int:NKEventSubscription]] = [:]
 
-    public func on<T>(eventType: String, handler: (T) -> Void) -> NKEventSubscription {
+    open func on<T>(_ eventType: String, handler: @escaping (T) -> Void) -> NKEventSubscription {
     
         var eventSubscriptions: [Int:NKEventSubscription]
 
@@ -112,8 +109,9 @@ public class NKEventEmitter: NSObject {
         return subscription
     }
 
-    public func once<T>(event: String, handler: (T) -> Void) {
-        on(event) { (data: T) -> Void in
+    open func once<T>(_ event: String, handler: @escaping (T) -> Void) {
+        
+        _ = on(event) { (data: T) -> Void in
         
             self.currentSubscription?.remove()
             
@@ -123,11 +121,11 @@ public class NKEventEmitter: NSObject {
     
     }
 
-    public func removeAllListeners(eventType: String?) {
+    open func removeAllListeners(_ eventType: String?) {
     
         if let eventType = eventType {
         
-            subscriptions.removeValueForKey(eventType)
+            subscriptions.removeValue(forKey: eventType)
       
         } else {
         
@@ -137,7 +135,7 @@ public class NKEventEmitter: NSObject {
     
     }
 
-    public func emit<T>(event: String, _ data: T) {
+    open func emit<T>(_ event: String, _ data: T) {
     
         if let subscriptions = subscriptions[event] {
         
@@ -157,15 +155,15 @@ public class NKEventEmitter: NSObject {
 
 private class NKSignalEmitter: NKEventEmitter {
     
-    private var earlyTriggers: [String: Any] = [:]
+    fileprivate var earlyTriggers: [String: Any] = [:]
     
-    override func once<T>(event: String, handler: (T) -> Void) {
+    override func once<T>(_ event: String, handler: @escaping (T) -> Void) {
 
         let registerBlock = { () -> Void in
         
             if let data = self.earlyTriggers[event] {
             
-                self.earlyTriggers.removeValueForKey(event)
+                self.earlyTriggers.removeValue(forKey: event)
                 
                 handler(data as! T)
                 
@@ -173,7 +171,7 @@ private class NKSignalEmitter: NKEventEmitter {
             
             }
             
-            self.on(event) { (data: T) -> Void in
+            _ = self.on(event) { (data: T) -> Void in
             
                 self.currentSubscription?.remove()
                 
@@ -183,19 +181,19 @@ private class NKSignalEmitter: NKEventEmitter {
         
         }
         
-        if (NSThread.isMainThread()) {
+        if (Thread.isMainThread) {
         
             registerBlock()
        
         } else {
         
-            dispatch_async(dispatch_get_main_queue(), registerBlock)
+            DispatchQueue.main.async(execute: registerBlock)
         
         }
     
     }
     
-    override func emit<T>(event: String, _ data: T) {
+    override func emit<T>(_ event: String, _ data: T) {
     
         let triggerBlock = { () -> Void in
         
@@ -215,13 +213,13 @@ private class NKSignalEmitter: NKEventEmitter {
         
         }
         
-        if (NSThread.isMainThread()) {
+        if (Thread.isMainThread) {
         
             triggerBlock()
         
         } else {
         
-            dispatch_async(dispatch_get_main_queue(), triggerBlock)
+            DispatchQueue.main.async(execute: triggerBlock)
         
         }
     

@@ -20,19 +20,19 @@ import Foundation
 
 public enum NKEngineType: Int {
  
-    case JavaScriptCore  = 0
+    case javaScriptCore  = 0
     
-    case Nitro = 1
+    case nitro = 1
     
-    case UIWebView = 2
+    case uiWebView = 2
 
 }
 
-public class NKScriptContextFactory: NSObject {
+open class NKScriptContextFactory: NSObject {
 
     internal static var _contexts: Dictionary<Int, AnyObject> = Dictionary<Int, AnyObject>()
 
-    public class var sequenceNumber: Int {
+    open class var sequenceNumber: Int {
 
         struct sequence {
         
@@ -48,21 +48,21 @@ public class NKScriptContextFactory: NSObject {
     
     }
 
-    public func createScriptContext(options: [String: AnyObject] = Dictionary<String, AnyObject>(), delegate cb: NKScriptContextDelegate) {
+    open func createScriptContext(_ options: [String: AnyObject] = Dictionary<String, AnyObject>(), delegate cb: NKScriptContextDelegate) {
     
-        let engine = NKEngineType(rawValue: (options["Engine"] as? Int)!) ?? NKEngineType.JavaScriptCore
+        let engine = NKEngineType(rawValue: (options["Engine"] as? Int)!) ?? NKEngineType.javaScriptCore
 
         switch engine {
         
-        case .JavaScriptCore:
+        case .javaScriptCore:
         
             self.createContextJavaScriptCore(options, delegate: cb)
          
-        case .Nitro:
+        case .nitro:
         
             NKLogging.log("Nitro Not Implemented in NKScriptingLite")
             
-        case .UIWebView:
+        case .uiWebView:
         
             NKLogging.log("UIWebView JSC Not Implemented in NKScriptingLite")
             
@@ -70,11 +70,11 @@ public class NKScriptContextFactory: NSObject {
     
     }
     
-    public static var defaultQueue: dispatch_queue_t = {
+    open static var defaultQueue: DispatchQueue = {
         
         let label = "io.nodekit.scripting.default-queue"
         
-        return dispatch_queue_create(label, DISPATCH_QUEUE_SERIAL)
+        return DispatchQueue(label: label, attributes: [])
         
     }()
 
@@ -83,6 +83,6 @@ public class NKScriptContextFactory: NSObject {
 
 public protocol NKScriptContextHost: class {
     
-    func NKcreateScriptContext(id: Int, options: [String: AnyObject], delegate cb: NKScriptContextDelegate) -> Void
+    func NKcreateScriptContext(_ id: Int, options: [String: AnyObject], delegate cb: NKScriptContextDelegate) -> Void
     
 }
