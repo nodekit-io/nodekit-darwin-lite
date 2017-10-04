@@ -6,12 +6,12 @@ s.description  = "NodeKit is the universal, open-source, embedded engine that pr
 s.homepage     = "https://github.com/nodekit-io/nodekit"
 s.license      = { :type => 'APACHE-2', :file => 'LICENSE' }
 s.author       = { "OffGrid Networks" => 'admin@offgridn.com' }
-s.source       = { :git => "https://github.com/nodekit-io/nodekit-darwin-lite.git" }
+s.source       = { :git => "https://github.com/nodekit-io/nodekit-darwin-lite.git", :tag => "0.9.0" }
 
 s.ios.deployment_target = '9.0'
 s.osx.deployment_target = '10.11'
 s.requires_arc = true
-
+s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.0' }
 s.libraries = 'compression'
 s.source_files =  "src/nodekit/NKScripting/**/*.{swift,h,m}", "src/nodekit/NKScriptingLite/**/*.{swift,h,m}"
 s.resources =  [
@@ -19,4 +19,3 @@ s.resources =  [
 ]
 
 end
-
