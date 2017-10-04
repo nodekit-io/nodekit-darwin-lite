@@ -173,7 +173,7 @@ open class NKLogging {
         
         #if DEBUG
             
-            filter = Filter(upto: .Debug)
+            filter = Filter(upto: .debug)
             
         #else
             
