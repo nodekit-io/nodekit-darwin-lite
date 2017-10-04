@@ -18,15 +18,15 @@
 
 import Cocoa
 
-let app      = NSApplication.sharedApplication()
+let app      = NSApplication.shared
 let delegate = SampleAppDelegate()
 app.delegate = delegate
-app.setActivationPolicy(.Accessory)
-atexit_b { app.setActivationPolicy(.Prohibited); return }
+app.setActivationPolicy(.accessory)
+atexit_b { app.setActivationPolicy(.prohibited); return }
 
 
-NSUserDefaults.standardUserDefaults().setBool(true, forKey: "WebKitDeveloperExtras")
+UserDefaults.standard.set(true, forKey: "WebKitDeveloperExtras")
 
-NSUserDefaults.standardUserDefaults().synchronize()
+UserDefaults.standard.synchronize()
 
 app.run()

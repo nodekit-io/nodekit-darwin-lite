@@ -20,17 +20,17 @@
 
 import Foundation
 
-public class NKScriptSource: NSObject {
+open class NKScriptSource: NSObject {
 
-    public let source: String
+    open let source: String
 
-    public let cleanup: String?
+    open let cleanup: String?
     
-    public let filename: String
+    open let filename: String
     
-    public let namespace: String?
+    open let namespace: String?
     
-    public var context: NKScriptContext?
+    open var context: NKScriptContext?
     
     public init(source: String, asFilename: String, namespace: String? = nil, cleanup: String? = nil) {
     
@@ -74,7 +74,7 @@ public class NKScriptSource: NSObject {
         
     }
     
-    internal func inject(context: NKScriptContext) {
+    internal func inject(_ context: NKScriptContext) {
         
         self.context = context
         
@@ -84,7 +84,7 @@ public class NKScriptSource: NSObject {
         
     }
     
-    private func eject() {
+    fileprivate func eject() {
         
         guard let context = context else { return }
         

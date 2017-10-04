@@ -22,23 +22,23 @@ import Darwin
 
 import Foundation
 
-public typealias asl_object_t = COpaquePointer
+public typealias asl_object_t = OpaquePointer
 
-@_silgen_name("asl_open") func asl_open(ident: UnsafePointer<Int8>, _ facility: UnsafePointer<Int8>, _ opts: UInt32) -> asl_object_t
+@_silgen_name("asl_open") func asl_open(_ ident: UnsafePointer<Int8>?, _ facility: UnsafePointer<Int8>, _ opts: UInt32) -> asl_object_t
 
-@_silgen_name("asl_close") func asl_close(obj: asl_object_t)
+@_silgen_name("asl_close") func asl_close(_ obj: asl_object_t)
 
-@_silgen_name("asl_vlog") func asl_vlog(obj: asl_object_t, _ msg: asl_object_t, _ level: Int32, _ format: UnsafePointer<Int8>, _ ap: CVaListPointer) -> Int32
+@_silgen_name("asl_vlog") func asl_vlog(_ obj: asl_object_t, _ msg: asl_object_t?, _ level: Int32, _ format: UnsafePointer<Int8>, _ ap: CVaListPointer) -> Int32
 
-@_silgen_name("asl_add_output_file") func asl_add_output_file(client: asl_object_t, _ descriptor: Int32, _ msg_fmt: UnsafePointer<Int8>, _ time_fmt: UnsafePointer<Int8>, _ filter: Int32, _ text_encoding: Int32) -> Int32
+@_silgen_name("asl_add_output_file") func asl_add_output_file(_ client: asl_object_t, _ descriptor: Int32, _ msg_fmt: UnsafePointer<Int8>, _ time_fmt: UnsafePointer<Int8>, _ filter: Int32, _ text_encoding: Int32) -> Int32
 
-@_silgen_name("asl_set_output_file_filter") func asl_set_output_file_filter(asl: asl_object_t, _ descriptor: Int32, _ filter: Int32) -> Int32
+@_silgen_name("asl_set_output_file_filter") func asl_set_output_file_filter(_ asl: asl_object_t, _ descriptor: Int32, _ filter: Int32) -> Int32
 
-public class NKLogging {
+open class NKLogging {
     
-    private static var logger = NKLogging(facility: "io.nodekit.core.consolelog", emitter: NKEventEmitter.global)
+    fileprivate static var logger = NKLogging(facility: "io.nodekit.core.consolelog", emitter: NKEventEmitter.global)
     
-    public class func log(message: String, level: Level? = nil, labels: [String:AnyObject]? = [:]) {
+    open class func log(_ message: String, level: Level? = nil, labels: [String:AnyObject]? = [:]) {
         
         
        logger.log(message, level: level, labels: labels)
@@ -47,9 +47,9 @@ public class NKLogging {
         
     }
     
-    @noreturn public class func die(@autoclosure message: ()->String, file: StaticString = #file, line: UInt = #line) {
+    open class func die(_ message: @autoclosure ()->String, file: StaticString = #file, line: UInt = #line) -> Never  {
         
-        logger.log(message(), level: .Alert)
+        logger.log(message(), level: .alert)
         
         fatalError(message, file: file, line: line)
         
@@ -57,40 +57,40 @@ public class NKLogging {
     
     public enum Level: Int32 {
         
-        case Emergency = 0
+        case emergency = 0
         
-        case Alert     = 1
+        case alert     = 1
         
-        case Critical  = 2
+        case critical  = 2
         
-        case Error     = 3
+        case error     = 3
         
-        case Warning   = 4
+        case warning   = 4
         
-        case Notice    = 5
+        case notice    = 5
         
-        case Info      = 6
+        case info      = 6
         
-        case Debug     = 7
+        case debug     = 7
         
-        private static let symbols: [Character] = [
+        fileprivate static let symbols: [Character] = [
             
             "\0", "\0", "$", "!", "?", "-", "+", " "
             
         ]
         
         public init(description: String) {
-            self = .Debug
+            self = .debug
             var i: Int32 = 0
             while let item = Level(rawValue: i) {
-                if String(item) == description { self = item }
+                if String(describing: item) == description { self = item }
                 i += 1
             }
         }
         
-        private init?(symbol: Character) {
+        fileprivate init?(symbol: Character) {
             
-            guard symbol != "\0", let value = Level.symbols.indexOf(symbol) else {
+            guard symbol != "\0", let value = Level.symbols.index(of: symbol) else {
                 
                 return nil
                 
@@ -102,9 +102,9 @@ public class NKLogging {
         
     }
     
-    public struct Filter: OptionSetType {
+    public struct Filter: OptionSet {
         
-        private var value: Int32
+        fileprivate var value: Int32
         
         public var rawValue: Int32 {
             
@@ -146,25 +146,24 @@ public class NKLogging {
         
         public let labels: [String: AnyObject]
         
-        public let timestamp: NSDate
+        public let timestamp: Date
         
     }
     
-    public var filter: Filter {
+    open var filter: Filter {
         
         didSet {
             
-            asl_set_output_file_filter(client, STDERR_FILENO, filter.rawValue)
-            
+            _ = asl_set_output_file_filter(client, STDERR_FILENO, filter.rawValue)
         }
         
     }
     
-    private let client: asl_object_t
+    fileprivate let client: asl_object_t
     
-    private var lock: pthread_mutex_t = pthread_mutex_t()
+    fileprivate var lock: pthread_mutex_t = pthread_mutex_t()
     
-    private var emitters: [NKEventEmitter] = []
+    fileprivate var emitters: [NKEventEmitter] = []
     
     public init(facility: String, format: String? = nil, emitter: NKEventEmitter?) {
         
@@ -174,29 +173,29 @@ public class NKLogging {
         
         #if DEBUG
             
-            filter = Filter(upto: .Debug)
+            filter = Filter(upto: .debug)
             
         #else
             
-            filter = Filter(upto: .Notice)
+            filter = Filter(upto: .notice)
             
         #endif
         
         let format = format ?? "$((Time)(lcl)) $(Facility) <$((Level)(char))>: $(Message)"
         
-        asl_add_output_file(client, STDERR_FILENO, format, "sec", filter.rawValue, 1)
+        _ = asl_add_output_file(client, STDERR_FILENO, format, "sec", filter.rawValue, 1)
         
         if let emitter = emitter {
+            
             self.addEmitter(emitter)
         }
-        
     }
     
-    public func addEmitter(emitter: NKEventEmitter) {
+    open func addEmitter(_ emitter: NKEventEmitter) {
         emitters.append(emitter)
     }
     
-    public func removeEmitter(emitter: NKEventEmitter) {
+    open func removeEmitter(_ emitter: NKEventEmitter) {
         emitters = emitters.filter() { $0 !== emitter }
     }
     
@@ -208,40 +207,36 @@ public class NKLogging {
         
     }
     
-    public func log(message: String, level: Level, labels: [String:AnyObject]) {
+    open func log(_ message: String, level: Level, labels: [String:AnyObject]) {
         
         pthread_mutex_lock(&lock)
         
-        asl_vlog(client, nil, level.rawValue, message, getVaList([]))
+        _ = asl_vlog(client, nil, level.rawValue, message, getVaList([]))
         
         emitters.forEach { (emitter) in
-            emitter.emit("log", Entry(message: message, level: level, labels: labels, timestamp: NSDate()) )
+            emitter.emit("log", Entry(message: message, level: level, labels: labels, timestamp: Date()) )
         }
         
         pthread_mutex_unlock(&lock)
-        
     }
     
-    public func log(message: String, level: Level? = nil, labels: [String:AnyObject]? = nil) {
+    open func log(_ message: String, level: Level? = nil, labels: [String:AnyObject]? = nil) {
                 
         var msg = message
         
-        var lvl = level ?? .Debug
+        var lvl = level ?? .debug
         
         let labels = labels ?? [:]
         
-        if level == nil, let ch = msg.characters.first, l = Level(symbol: ch) {
+        if level == nil, let ch = msg.characters.first, let l = Level(symbol: ch) {
             
-            msg = msg[msg.startIndex.successor() ..< msg.endIndex]
+            msg = String(msg[msg.characters.index(after: msg.startIndex) ..< msg.endIndex])
             
             lvl = l
-            
         }
  
         log(msg, level: lvl, labels: labels)
-        
     }
-    
 }
 
 

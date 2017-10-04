@@ -46,14 +46,14 @@ import Darwin
  */
 
 enum NKAR_CompressionMethod {
-    case None
-    case Deflate
+    case none
+    case deflate
     
     init?(_ i: UInt16) {
         if i == 0 {
-            self = .None
+            self = .none
         } else if i == 8 {
-            self = .Deflate
+            self = .deflate
         } else {
             return nil
         }
@@ -141,7 +141,7 @@ extension NKAR_CentralDirectory {
     
     static let signature: UInt32 = 0x02014b50
     
-    static func findCentralDirectoriesInBytes(bytes: UnsafePointer<UInt8>, length: Int, withEndRecord er: NKAR_EndRecord) -> [String: NKAR_CentralDirectory]? {
+    static func findCentralDirectoriesInBytes(_ bytes: UnsafePointer<UInt8>, length: Int, withEndRecord er: NKAR_EndRecord) -> [String: NKAR_CentralDirectory]? {
         
         var reader = NKAR_BytesReader(bytes: bytes, index: Int(er.centralDirectoryOffset))
         

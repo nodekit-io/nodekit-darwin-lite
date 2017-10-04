@@ -23,25 +23,25 @@ import Compression
 
 struct NKAR_Uncompressor {
     
-    static func uncompressWithArchiveData(cdir: NKAR_CentralDirectory, data: NSData) -> NSData? {
+    static func uncompressWithArchiveData(_ cdir: NKAR_CentralDirectory, data: Data) -> Data? {
         
-            let bytes = unsafeBitCast(data.bytes, UnsafePointer<UInt8>.self)
-            let offsetBytes = bytes.advancedBy(Int(cdir.dataOffset))
+            let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
+            let offsetBytes = bytes.advanced(by: Int(cdir.dataOffset))
             return uncompressWithFileBytes(cdir, fromBytes: offsetBytes)
     }
     
     
-    func unzip_(compressedData:NSData) -> NSData? {
-        let streamPtr = UnsafeMutablePointer<compression_stream>.alloc(1)
-        var stream = streamPtr.memory
+    func unzip_(_ compressedData:Data) -> Data? {
+        let streamPtr = UnsafeMutablePointer<compression_stream>.allocate(capacity: 1)
+        var stream = streamPtr.pointee
         var status: compression_status
         
         status = compression_stream_init(&stream, COMPRESSION_STREAM_DECODE, COMPRESSION_ZLIB)
-        stream.src_ptr = UnsafePointer<UInt8>(compressedData.bytes)
-        stream.src_size = compressedData.length
+        stream.src_ptr = (compressedData as NSData).bytes.bindMemory(to: UInt8.self, capacity: compressedData.count)
+        stream.src_size = compressedData.count
         
         let dstBufferSize: size_t = 4096
-        let dstBufferPtr = UnsafeMutablePointer<UInt8>.alloc(dstBufferSize)
+        let dstBufferPtr = UnsafeMutablePointer<UInt8>.allocate(capacity: dstBufferSize)
         stream.dst_ptr = dstBufferPtr
         stream.dst_size = dstBufferSize
         
@@ -52,13 +52,13 @@ struct NKAR_Uncompressor {
             switch status {
             case COMPRESSION_STATUS_OK:
                 if stream.dst_size == 0 {
-                    decompressedData.appendBytes(dstBufferPtr, length: dstBufferSize)
+                    decompressedData.append(dstBufferPtr, length: dstBufferSize)
                     stream.dst_ptr = dstBufferPtr
                     stream.dst_size = dstBufferSize
                 }
             case COMPRESSION_STATUS_END:
                 if stream.dst_ptr > dstBufferPtr {
-                    decompressedData.appendBytes(dstBufferPtr, length: stream.dst_ptr - dstBufferPtr)
+                    decompressedData.append(dstBufferPtr, length: stream.dst_ptr - dstBufferPtr)
                 }
             default:
                 break
@@ -69,7 +69,7 @@ struct NKAR_Uncompressor {
         compression_stream_destroy(&stream)
         
         if status == COMPRESSION_STATUS_END {
-            return decompressedData
+            return decompressedData as Data
         } else {
             print("Unzipping failed")
             return nil
@@ -77,23 +77,23 @@ struct NKAR_Uncompressor {
     }
 
     
-    static func uncompressWithFileBytes(cdir: NKAR_CentralDirectory, fromBytes bytes: UnsafePointer<UInt8>) -> NSData? {
+    static func uncompressWithFileBytes(_ cdir: NKAR_CentralDirectory, fromBytes bytes: UnsafePointer<UInt8>) -> Data? {
         
             let len = Int(cdir.uncompressedSize)
             
-            let out = UnsafeMutablePointer<UInt8>.alloc(len)
+            let out = UnsafeMutablePointer<UInt8>.allocate(capacity: len)
             
             switch cdir.compressionMethod {
             
-            case .None:
+            case .none:
             
-                out.assignFrom(UnsafeMutablePointer<UInt8>(bytes), count: len)
+                out.assign(from: UnsafeMutablePointer<UInt8>(mutating: bytes), count: len)
            
-            case .Deflate:
+            case .deflate:
                 
-                let streamPtr = UnsafeMutablePointer<compression_stream>.alloc(1)
+                let streamPtr = UnsafeMutablePointer<compression_stream>.allocate(capacity: 1)
                 
-                var stream = streamPtr.memory
+                var stream = streamPtr.pointee
                 
                 var status : compression_status
                 
@@ -139,33 +139,33 @@ struct NKAR_Uncompressor {
                 compression_stream_destroy(&stream)
             }
             
-            return NSData(bytesNoCopy: out, length: len, freeWhenDone: true)
+            return Data(bytesNoCopy: UnsafeMutablePointer<UInt8>(out), count: len, deallocator: .free)
             
      
     }
     
     
-    static func uncompressWithCentralDirectory(cdir: NKAR_CentralDirectory, fromBytes bytes: UnsafePointer<UInt8>) -> NSData? {
+    static func uncompressWithCentralDirectory(_ cdir: NKAR_CentralDirectory, fromBytes bytes: UnsafePointer<UInt8>) -> Data? {
         
-            let offsetBytes = bytes.advancedBy(Int(cdir.dataOffset))
+            let offsetBytes = bytes.advanced(by: Int(cdir.dataOffset))
             
-            let offsetMBytes = UnsafeMutablePointer<UInt8>(offsetBytes)
+            let offsetMBytes = UnsafeMutablePointer<UInt8>(mutating: offsetBytes)
             
             let len = Int(cdir.uncompressedSize)
             
-            let out = UnsafeMutablePointer<UInt8>.alloc(len)
+            let out = UnsafeMutablePointer<UInt8>.allocate(capacity: len)
             
             switch cdir.compressionMethod {
                 
-            case .None:
+            case .none:
                 
-                out.assignFrom(offsetMBytes, count: len)
+                out.assign(from: offsetMBytes, count: len)
                 
-            case .Deflate:
+            case .deflate:
                 
-                let streamPtr = UnsafeMutablePointer<compression_stream>.alloc(1)
+                let streamPtr = UnsafeMutablePointer<compression_stream>.allocate(capacity: 1)
                 
-                var stream = streamPtr.memory
+                var stream = streamPtr.pointee
                 
                 var status : compression_status
                 
@@ -219,7 +219,7 @@ struct NKAR_Uncompressor {
                 compression_stream_destroy(&stream)
             }
             
-            return NSData(bytesNoCopy: out, length: len, freeWhenDone: true)
+            return Data(bytesNoCopy: UnsafeMutablePointer<UInt8>(out), count: len, deallocator: .free)
             
     }
 

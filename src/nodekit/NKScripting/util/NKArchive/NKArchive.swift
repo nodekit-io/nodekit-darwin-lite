@@ -20,13 +20,13 @@
 
 import Foundation
 
-public class NKArchive {
+open class NKArchive {
     
     var path: String
     
     var _cdirs: [String: NKAR_CentralDirectory]
     
-    public var keys: [String] {
+    open var keys: [String] {
         get {
             return Array(_cdirs.keys)
         }
@@ -40,15 +40,15 @@ public class NKArchive {
         
     }
     
-    static func createFromPath(path: String) -> (NKArchive, NSData)? {
+    static func createFromPath(_ path: String) -> (NKArchive, Data)? {
         
-        guard let data = NSFileManager.defaultManager().contentsAtPath(path)
+        guard let data = FileManager.default.contents(atPath: path)
             
             else { return nil }
         
-        let bytes = unsafeBitCast(data.bytes, UnsafePointer<UInt8>.self)
+        let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
         
-        let len = data.length
+        let len = data.count
         
         guard let _endrec = NKAR_EndRecord.findEndRecordInBytes(bytes, length: len)
             
@@ -62,11 +62,11 @@ public class NKArchive {
         
     }
     
-    public static func createFromData(path: String, data: NSData) -> NKArchive? {
+    open static func createFromData(_ path: String, data: Data) -> NKArchive? {
         
-        let bytes = unsafeBitCast(data.bytes, UnsafePointer<UInt8>.self)
+        let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
         
-        let len = data.length
+        let len = data.count
         
         guard let _endrec = NKAR_EndRecord.findEndRecordInBytes(bytes, length: len)
             
@@ -84,7 +84,7 @@ public class NKArchive {
 
 public extension NKArchive {
     
-    private func getDirectory_(filename: String) -> NKAR_CentralDirectory? {
+    fileprivate func getDirectory_(_ filename: String) -> NKAR_CentralDirectory? {
         
         let cdir = _cdirs[filename]
         
@@ -92,12 +92,12 @@ public extension NKArchive {
         
         if !filename.hasPrefix("*") { return nil }
         
-        let filename = (filename as NSString).substringFromIndex(1)
+        let filename = (filename as NSString).substring(from: 1)
         
         let depth = (filename as NSString).pathComponents.count
         
         guard let item = self.files.filter({(item: String) -> Bool in
-            return item.lowercaseString.hasSuffix(filename.lowercaseString) &&
+            return item.lowercased().hasSuffix(filename.lowercased()) &&
                 ((item as NSString).pathComponents.count == depth)
             
         }).first else { return nil }
@@ -106,52 +106,48 @@ public extension NKArchive {
         
     }
     
-    func dataForFile(filename: String) -> NSData? {
+    func dataForFile(_ filename: String) -> Data? {
         
         guard let _cdir = self.getDirectory_(filename) else { return nil }
         
-        guard let file: NSFileHandle = NSFileHandle(forReadingAtPath: self.path) else { return nil }
+        guard let file: FileHandle = FileHandle(forReadingAtPath: self.path) else { return nil }
         
-        file.seekToFileOffset(UInt64(_cdir.dataOffset))
+        file.seek(toFileOffset: UInt64(_cdir.dataOffset))
         
-        let data = file.readDataOfLength(Int(_cdir.compressedSize))
+        let data = file.readData(ofLength: Int(_cdir.compressedSize))
         
         file.closeFile()
         
-        let bytes = unsafeBitCast(data.bytes, UnsafePointer<UInt8>.self)
+        let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
         
         return NKAR_Uncompressor.uncompressWithFileBytes(_cdir, fromBytes: bytes)
-        
     }
     
-    func dataForFileWithArchiveData(filename: String, data: NSData) -> NSData? {
+    func dataForFileWithArchiveData(_ filename: String, data: Data) -> Data? {
         
         guard let _cdir = self.getDirectory_(filename) else  { return nil }
         
         return NKAR_Uncompressor.uncompressWithArchiveData(_cdir, data: data)
-        
     }
     
     
-    func exists(filename: String) -> Bool {
+    func exists(_ filename: String) -> Bool {
         
         if (self.getDirectory_(filename) != nil) {return true} else { return false }
-        
     }
     
     var files: [String] {
         
         return Array(self._cdirs.keys)
-        
     }
     
-    func containsFile(file: String) -> Bool {
+    func containsFile(_ file: String) -> Bool {
         
         return self.getDirectory_(file) != nil
         
     }
     
-    func containsFolder(module: String) -> Bool {
+    func containsFolder(_ module: String) -> Bool {
         
         var folder = module
         
@@ -163,7 +159,7 @@ public extension NKArchive {
     }
     
     
-    func stat(filename: String) -> Dictionary<String, AnyObject> {
+    func stat(_ filename: String) -> Dictionary<String, AnyObject> {
         
         var storageItem  = Dictionary<String, NSObject>()
         
@@ -171,20 +167,20 @@ public extension NKArchive {
             ?? self.getDirectory_(filename + "/")
             else { return storageItem }
         
-        storageItem["birthtime"] = NSDate(timeIntervalSince1970: Double(cdir.lastmodUnixTimestamp))
+        storageItem["birthtime"] = Date(timeIntervalSince1970: Double(cdir.lastmodUnixTimestamp)) as NSObject?
         
-        storageItem["size"] = NSNumber(unsignedInt: cdir.uncompressedSize)
+        storageItem["size"] = NSNumber(value: cdir.uncompressedSize as UInt32)
         
         storageItem["mtime"] = storageItem["birthtime"]
         
-        storageItem["path"] = (self.path as NSString).stringByAppendingPathComponent(filename)
+        storageItem["path"] = (self.path as NSString).appendingPathComponent(filename) as NSObject?
         
-        storageItem["filetype"] = cdir.fileName.hasSuffix("/") ? "Directory" : "File"
+        storageItem["filetype"] = cdir.fileName.hasSuffix("/") ? "Directory" as NSString : "File" as NSObject?
         
         return storageItem
     }
     
-    func getDirectory(foldername: String) -> [String] {
+    func getDirectory(_ foldername: String) -> [String] {
         
         var foldername = foldername;
         
@@ -196,7 +192,7 @@ public extension NKArchive {
         let depth = (foldername as NSString).pathComponents.count + 1
         
         let items = self.files.filter({(item: String) -> Bool in
-            return item.lowercaseString.hasPrefix(foldername.lowercaseString) &&
+            return item.lowercased().hasPrefix(foldername.lowercased()) &&
                 ((item as NSString).pathComponents.count == depth) &&
                 (item.characters.last == "/")
         })
@@ -211,13 +207,13 @@ public extension NKArchive {
 
 public extension NKArchive {
     
-    subscript(file: String) -> NSData? {
+    subscript(file: String) -> Data? {
         
         return dataForFile(file)
         
     }
     
-    subscript(file: String, withArchiveData data: NSData) -> NSData? {
+    subscript(file: String, withArchiveData data: Data) -> Data? {
         
         return dataForFileWithArchiveData(file, data: data)
         

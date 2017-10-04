@@ -21,10 +21,10 @@ import JavaScriptCore
 
 extension NKScriptContextFactory {
 
-    func createContextJavaScriptCore(options: [String: AnyObject] = Dictionary<String, AnyObject>(), delegate cb: NKScriptContextDelegate) {
+    func createContextJavaScriptCore(_ options: [String: AnyObject] = Dictionary<String, AnyObject>(), delegate cb: NKScriptContextDelegate) {
     
     //  dispatch_async(NKScriptContextFactory.defaultQueue) {
-      dispatch_async(dispatch_get_main_queue()) {
+      DispatchQueue.main.async {
         
             let vm = JSVirtualMachine()
             
@@ -32,11 +32,11 @@ extension NKScriptContextFactory {
 
             let id = NKScriptContextFactory.sequenceNumber
             
-            context.NKcreateScriptContext(id, options: options, delegate: cb)
+            context?.NKcreateScriptContext(id, options: options, delegate: cb)
 
             var item = Dictionary<String, AnyObject>()
             
-            NKScriptContextFactory._contexts[id] = item
+            NKScriptContextFactory._contexts[id] = item as AnyObject?
             
             item["JSVirtualMachine"] = vm
             
@@ -47,7 +47,7 @@ extension NKScriptContextFactory {
 
 extension JSContext: NKScriptContextHost {
     
-    public func NKcreateScriptContext(id: Int, options: [String: AnyObject] = Dictionary<String, AnyObject>(), delegate cb: NKScriptContextDelegate) -> Void {
+    public func NKcreateScriptContext(_ id: Int, options: [String: AnyObject] = Dictionary<String, AnyObject>(), delegate cb: NKScriptContextDelegate) -> Void {
         
         let context = NKJSContext(self, id: id)
         

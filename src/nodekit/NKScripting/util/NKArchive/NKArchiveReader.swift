@@ -22,9 +22,9 @@ import Foundation
 
 public struct NKArchiveReader {
     
-    var _cacheCDirs: NSCache
+    var _cacheCDirs: NSCache<NSString, NKArchive>
     
-    var _cacheArchiveData: NSCache
+    var _cacheArchiveData: NSCache<NSString, NSData>
 
 }
 
@@ -32,7 +32,7 @@ public extension NKArchiveReader {
     
     static func create() -> NKArchiveReader {
         
-        let cacheArchiveData2 = NSCache()
+        let cacheArchiveData2 = NSCache<NSString, NSData>()
 
         cacheArchiveData2.countLimit = 10
         
@@ -40,34 +40,34 @@ public extension NKArchiveReader {
     
     }
     
-    mutating func dataForFile(archive: String, filename: String) -> NSData? {
+    mutating func dataForFile(_ archive: String, filename: String) -> Data? {
         
-        if let nkArchive = _cacheCDirs.objectForKey(archive) as? NKArchive {
+        if let nkArchive = _cacheCDirs.object(forKey: archive as NSString) {
             
-            if let data = _cacheArchiveData.objectForKey(archive) as? NSData {
+            if let data = _cacheArchiveData.object(forKey: archive as NSString) as? Data {
                 
                 return nkArchive[filename, withArchiveData: data]
                 
             } else
                 
             {
-                return nkArchive[filename]
+                return nkArchive[filename] as Data?
             }
             
         } else {
             
             guard let (nkArchive, data) = NKArchive.createFromPath(archive) else { return nil }
             
-            _cacheCDirs.setObject(nkArchive, forKey: archive)
-            _cacheArchiveData.setObject(data, forKey: archive)
+            _cacheCDirs.setObject(nkArchive, forKey: archive as NSString)
+            _cacheArchiveData.setObject(data as NSData, forKey: archive as NSString)
             
             return nkArchive[filename, withArchiveData: data]
         }
     }
     
-    mutating func exists(archive: String, filename: String) -> Bool {
+    mutating func exists(_ archive: String, filename: String) -> Bool {
         
-        if let nkArchive = _cacheCDirs.objectForKey(archive) as? NKArchive {
+        if let nkArchive = _cacheCDirs.object(forKey: archive as NSString) {
             
                 return nkArchive.exists(filename)
             
@@ -75,16 +75,16 @@ public extension NKArchiveReader {
             
             guard let (nkArchive, data) = NKArchive.createFromPath(archive) else { return false }
             
-            _cacheCDirs.setObject(nkArchive, forKey: archive)
-            _cacheArchiveData.setObject(data, forKey: archive)
+            _cacheCDirs.setObject(nkArchive, forKey: archive as NSString)
+            _cacheArchiveData.setObject(data as NSData, forKey: archive as NSString)
             
             return nkArchive.exists(filename)
         }
     }
     
-    mutating func stat(archive: String, filename: String) -> Dictionary<String, AnyObject> {
+    mutating func stat(_ archive: String, filename: String) -> Dictionary<String, AnyObject> {
         
-        if let nkArchive = _cacheCDirs.objectForKey(archive) as? NKArchive {
+        if let nkArchive = _cacheCDirs.object(forKey: archive as NSString) {
             
             return nkArchive.stat(filename)
             
@@ -92,16 +92,16 @@ public extension NKArchiveReader {
             
             guard let (nkArchive, data) = NKArchive.createFromPath(archive) else { return Dictionary<String, AnyObject>() }
             
-            _cacheCDirs.setObject(nkArchive, forKey: archive)
-            _cacheArchiveData.setObject(data, forKey: archive)
+            _cacheCDirs.setObject(nkArchive, forKey: archive as NSString)
+            _cacheArchiveData.setObject(data as NSData, forKey: archive as NSString)
             
             return nkArchive.stat(filename)
         }
     }
     
-    mutating func getDirectory(archive: String, foldername: String) -> [String] {
+    mutating func getDirectory(_ archive: String, foldername: String) -> [String] {
         
-        if let nkArchive = _cacheCDirs.objectForKey(archive) as? NKArchive {
+        if let nkArchive = _cacheCDirs.object(forKey: archive as NSString) {
             
             return nkArchive.getDirectory(foldername)
             
@@ -109,42 +109,11 @@ public extension NKArchiveReader {
             
             guard let (nkArchive, data) = NKArchive.createFromPath(archive) else { return [String]() }
             
-            _cacheCDirs.setObject(nkArchive, forKey: archive)
-            _cacheArchiveData.setObject(data, forKey: archive)
+            _cacheCDirs.setObject(nkArchive, forKey: archive as NSString)
+            _cacheArchiveData.setObject(data as NSData, forKey: archive as NSString)
             
             return nkArchive.getDirectory(foldername)
         }
-    }
-
-
-    
+    }    
 }
 
-
-extension NSCache {
-  
-    subscript(key: AnyObject) -> AnyObject? {
-    
-        get {
-        
-            return objectForKey(key)
-       
-        }
-        
-        set {
-        
-            if let value: AnyObject = newValue {
-            
-                setObject(value, forKey: key)
-            
-            } else {
-            
-                removeObjectForKey(key)
-            
-            }
-        
-        }
-    
-    }
-
-}

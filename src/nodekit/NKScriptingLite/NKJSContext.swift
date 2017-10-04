@@ -20,12 +20,12 @@
 
 import JavaScriptCore
 
-public class NKJSContext: NSObject {
+open class NKJSContext: NSObject {
     
-    private let nodeKitTimerKey = "NodeKitTimer"
+    fileprivate let nodeKitTimerKey = "NodeKitTimer"
     
-    private let _jsContext: JSContext
-    private let _id: Int
+    fileprivate let _jsContext: JSContext
+    fileprivate let _id: Int
     
     internal init(_ jsContext: JSContext, id: Int) {
         _jsContext = jsContext
@@ -42,43 +42,33 @@ public class NKJSContext: NSObject {
             NKLogging.log(body, level: NKLogging.Level(description: severity), labels: labels);
         }
         
-        _jsContext.exceptionHandler =  { (ctx: JSContext!, value: JSValue!) in
+        _jsContext.exceptionHandler =  { (ctx: JSContext?, value: JSValue?) in
             NKLogging.log("JavaScript Error");
             // type of String
-            let stacktrace = value.objectForKeyedSubscript("stack").toString()
+            let stacktrace = value?.objectForKeyedSubscript("stack").toString() ?? "No stack trace"
             // type of Number
-            let lineNumber = value.objectForKeyedSubscript("line")
+            let lineNumber: Any = value?.objectForKeyedSubscript("line") ?? "Unknown"
             // type of Number
-            let column = value.objectForKeyedSubscript("column")
+            let column: Any = value?.objectForKeyedSubscript("column") ?? "Unknown"
             let moreInfo = "in method \(stacktrace) Line number: \(lineNumber), column: \(column)"
             
-            NKLogging.log("JavaScript Error: \(value) \(moreInfo)")
-        }
-        
-        _jsContext.exceptionHandler =  { (ctx: JSContext!, value: JSValue!) in
-            // type of String
-            let stacktrace = value.objectForKeyedSubscript("stack").toString()
-            // type of Number
-            let lineNumber = value.objectForKeyedSubscript("line")
-            // type of Number
-            let column = value.objectForKeyedSubscript("column")
-            let moreInfo = "in method \(stacktrace) Line number: \(lineNumber), column: \(column)"
+            let errorString = value.map { $0.description } ?? "null"
             
-            NKLogging.log("JavaScript Error: \(value) \(moreInfo)")
+            NKLogging.log("JavaScript Error: \(errorString) \(moreInfo)")
         }
         
-        let scriptingBridge = JSValue(newObjectInContext: _jsContext)
+        let scriptingBridge = JSValue(newObjectIn: _jsContext)
         
-        scriptingBridge.setObject(unsafeBitCast(logjs, AnyObject.self), forKeyedSubscript: "log")
-        _jsContext.setObject(unsafeBitCast(scriptingBridge, AnyObject.self), forKeyedSubscript: "NKScriptingBridge")
+        scriptingBridge?.setObject(unsafeBitCast(logjs, to: AnyObject.self), forKeyedSubscript: "log" as (NSCopying & NSObjectProtocol)!)
+        _jsContext.setObject(unsafeBitCast(scriptingBridge, to: AnyObject.self), forKeyedSubscript: "NKScriptingBridge" as (NSCopying & NSObjectProtocol)!)
 
         let setTimeout: @convention(block) (JSValue, Int) -> () =
             { callback, timeout in
                 let timeVal = Int64(Double(timeout) * Double(NSEC_PER_MSEC))
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeVal), dispatch_get_main_queue(), { callback.callWithArguments(nil)})
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(timeVal) / Double(NSEC_PER_SEC), execute: { callback.call(withArguments: nil)})
         }
         
-        self._jsContext.setObject(unsafeBitCast(setTimeout, AnyObject.self), forKeyedSubscript: "setTimeout")
+        self._jsContext.setObject(unsafeBitCast(setTimeout, to: AnyObject.self), forKeyedSubscript: "setTimeout" as (NSCopying & NSObjectProtocol)!)
         
         let appjs = NKStorage.getResource("lib-scripting.nkar/lib-scripting/init_jsc.js", NKJSContext.self)
         
@@ -110,7 +100,7 @@ public class NKJSContext: NSObject {
             )
         )
         
-        self._jsContext.setObject(NKJSTimer(), forKeyedSubscript: nodeKitTimerKey)
+        self._jsContext.setObject(NKJSTimer(), forKeyedSubscript: nodeKitTimerKey as (NSCopying & NSObjectProtocol)!)
         
         NKStorage.attachTo(self)
     }
@@ -122,32 +112,32 @@ extension NKJSContext: NKScriptContext {
         get { return self._id }
     }
 
-    public func loadPlugin(object: AnyObject, namespace: String, options: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>() ) -> Void {
+    public func loadPlugin(_ object: AnyObject, namespace: String, options: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>() ) -> Void {
     
         self.setObjectForNamespace(object, namespace: namespace)
         
         NKLogging.log("+Plugin object \(object) is bound to \(namespace) with NKScriptingLite (JSExport) channel")
         
-        objc_setAssociatedObject(self, unsafeAddressOf(object), object, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self, Unmanaged.passUnretained(object).toOpaque(), object, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
         guard let jspath: String = options["js"] as? String else { return; }
         
-        guard let js = NKStorage.getResource(jspath, object.dynamicType) else { return; }
+        guard let js = NKStorage.getResource(jspath, type(of: object)) else { return; }
         
         self.injectJavaScript(NKScriptSource(source: js, asFilename: jspath))
 
     }
 
-    public func injectJavaScript(script: NKScriptSource) -> Void {
+    public func injectJavaScript(_ script: NKScriptSource) -> Void {
         
         script.inject(self)
       
-        objc_setAssociatedObject(self, unsafeAddressOf(script), script, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self, Unmanaged.passUnretained(script).toOpaque(), script, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
     }
 
 
-    public func evaluateJavaScript(javaScriptString: String,
+    public func evaluateJavaScript(_ javaScriptString: String,
         completionHandler: ((AnyObject?,
         NSError?) -> Void)?) {
         
@@ -158,24 +148,24 @@ extension NKJSContext: NKScriptContext {
         
     }
 
-    public func serialize(object: AnyObject?) -> String {
+    public func serialize(_ object: AnyObject?) -> String {
     
         var obj: AnyObject? = object
         
         if let val = obj as? NSValue {
         
-            obj = val as? NSNumber ?? val.nonretainedObjectValue
+            obj = val as? NSNumber ?? val.nonretainedObjectValue as AnyObject?
        
         }
 
         
         if let s = obj as? String {
          
-            let d = try? NSJSONSerialization.dataWithJSONObject([s], options: NSJSONWritingOptions(rawValue: 0))
+            let d = try? JSONSerialization.data(withJSONObject: [s], options: JSONSerialization.WritingOptions(rawValue: 0))
             
-            let json = NSString(data: d!, encoding: NSUTF8StringEncoding)!
+            let json = NSString(data: d!, encoding: String.Encoding.utf8.rawValue)!
             
-            return json.substringWithRange(NSMakeRange(1, json.length - 2))
+            return json.substring(with: NSMakeRange(1, json.length - 2))
             
         } else if let n = obj as? NSNumber {
             
@@ -187,21 +177,21 @@ extension NKJSContext: NKScriptContext {
             
             return n.stringValue
         
-        } else if let date = obj as? NSDate {
+        } else if let date = obj as? Date {
           
             return "\"\(date.toJSONDate())\""
         
-        } else if let _ = obj as? NSData {
+        } else if let _ = obj as? Data {
        
             // TODO: map to Uint8Array object
         
         } else if let a = obj as? [AnyObject] {
         
-            return "[" + a.map(self.serialize).joinWithSeparator(", ") + "]"
+            return "[" + a.map(self.serialize).joined(separator: ", ") + "]"
        
         } else if let d = obj as? [String: AnyObject] {
         
-            return "{" + d.keys.map {"\"\($0)\": \(self.serialize(d[$0]!))"}.joinWithSeparator(", ") + "}"
+            return "{" + d.keys.map {"\"\($0)\": \(self.serialize(d[$0]!))"}.joined(separator: ", ") + "}"
         
         } else if obj === NSNull() {
         
@@ -225,7 +215,7 @@ extension NKJSContext: NKScriptContext {
     }
 
     // private methods
-    private func setObjectForNamespace(object: AnyObject, namespace: String) -> Void {
+    fileprivate func setObjectForNamespace(_ object: AnyObject, namespace: String) -> Void {
 
         let global = _jsContext.globalObject
 
@@ -235,32 +225,32 @@ extension NKJSContext: NKScriptContext {
         
         if (fullNameArr.isEmpty) {
         
-            _jsContext.setObject(object, forKeyedSubscript: lastItem)
+            _jsContext.setObject(object, forKeyedSubscript: lastItem as (NSCopying & NSObjectProtocol)!)
             
             return
         
         }
 
-        let jsv = fullNameArr.reduce(global, combine: {previous, current in
+        let jsv = fullNameArr.reduce(global, {previous, current in
 
-            if (previous.hasProperty(current)) {
+            if (previous?.hasProperty(current))! {
             
-                return previous.objectForKeyedSubscript(current)
+                return previous?.objectForKeyedSubscript(current)
            
             }
             
-            let _jsv = JSValue(newObjectInContext: _jsContext)
+            let _jsv = JSValue(newObjectIn: _jsContext)
             
-            previous.setObject(_jsv, forKeyedSubscript: current)
+            previous?.setObject(_jsv, forKeyedSubscript: current as (NSCopying & NSObjectProtocol)!)
             
             return _jsv
         })
         
-        jsv.setObject(object, forKeyedSubscript: lastItem)
+        jsv?.setObject(object, forKeyedSubscript: lastItem as (NSCopying & NSObjectProtocol)!)
         
-        let selfjsv = jsv.objectForKeyedSubscript(lastItem) as JSValue
+        let selfjsv = (jsv?.objectForKeyedSubscript(lastItem))! as JSValue
         
-        objc_setAssociatedObject(object, unsafeAddressOf(JSValue), selfjsv, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(object, Unmanaged<AnyObject>.passUnretained(JSValue.self).toOpaque(), selfjsv, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         
     }
 }
@@ -269,7 +259,7 @@ public extension NSObject {
     
     var NKscriptObject: JSValue? {
         
-        return objc_getAssociatedObject(self, unsafeAddressOf(JSValue)) as? JSValue
+        return objc_getAssociatedObject(self, Unmanaged<AnyObject>.passUnretained(JSValue.self).toOpaque()) as? JSValue
         
     }
     

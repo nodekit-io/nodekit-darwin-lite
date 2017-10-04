@@ -26,13 +26,13 @@ public protocol NKScriptContext: class {
     
     var id: Int { get }
 
-    func loadPlugin(object: AnyObject, namespace: String, options: Dictionary<String, AnyObject>) -> Void
+    func loadPlugin(_ object: AnyObject, namespace: String, options: Dictionary<String, AnyObject>) -> Void
     
-    func injectJavaScript(script: NKScriptSource) -> Void
+    func injectJavaScript(_ script: NKScriptSource) -> Void
     
-    func evaluateJavaScript(javaScriptString: String, completionHandler: ((AnyObject?,NSError?) -> Void)?)
+    func evaluateJavaScript(_ javaScriptString: String, completionHandler: ((AnyObject?,NSError?) -> Void)?)
     
-    func serialize(object: AnyObject?) -> String
+    func serialize(_ object: AnyObject?) -> String
 
     func stop() -> Void
     
@@ -40,17 +40,17 @@ public protocol NKScriptContext: class {
 
 public protocol NKScriptContextDelegate: class {
 
-    func NKScriptEngineDidLoad(context: NKScriptContext) -> Void
+    func NKScriptEngineDidLoad(_ context: NKScriptContext) -> Void
     
-    func NKScriptEngineReady(context: NKScriptContext) -> Void
+    func NKScriptEngineReady(_ context: NKScriptContext) -> Void
 
 }
 
 public enum NKScriptExportType: Int {
     
-    case NKScriptExport = 0
+    case nkScriptExport = 0
     
-    case JSExport
+    case jsExport
     
 }
 

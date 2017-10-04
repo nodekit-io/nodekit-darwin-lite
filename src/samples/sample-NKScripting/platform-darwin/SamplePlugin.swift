@@ -22,33 +22,33 @@ import WebKit
 import NKScripting
 
 @objc protocol SamplePluginProtocol: NKScriptExport {
-    func logconsole(text: AnyObject?) -> Void
-    func alertSync(text: AnyObject?) -> String
+    func logconsole(_ text: AnyObject?) -> Void
+    func alertSync(_ text: AnyObject?) -> String
 }
 
 
 class SamplePlugin: NSObject, SamplePluginProtocol {
-    class func attachTo(context: NKScriptContext) {
-        context.loadPlugin(SamplePlugin(), namespace: "io.nodekit.test", options: ["PluginBridge": NKScriptExportType.NKScriptExport.rawValue])
+    class func attachTo(_ context: NKScriptContext) {
+        context.loadPlugin(SamplePlugin(), namespace: "io.nodekit.test", options: ["PluginBridge": NKScriptExportType.nkScriptExport.rawValue as NSNumber])
     }
 
-    func logconsole(text: AnyObject?) -> Void {
+    func logconsole(_ text: AnyObject?) -> Void {
         print(text as? String! ?? "")
     }
 
-    func alertSync(text: AnyObject?) -> String {
-        dispatch_async(dispatch_get_main_queue()) {
+    func alertSync(_ text: AnyObject?) -> String {
+        DispatchQueue.main.async {
             self._alert(title: text as? String, message: nil)
         }
         return "OK"
     }
 
-    private func _alert(title title: String?, message: String?) {
+    fileprivate func _alert(title: String?, message: String?) {
         let myPopup: NSAlert = NSAlert()
         myPopup.messageText = message ?? "NodeKit"
         myPopup.informativeText = title ?? ""
-        myPopup.alertStyle = .WarningAlertStyle
-        myPopup.addButtonWithTitle("OK")
+        myPopup.alertStyle = .warning
+        myPopup.addButton(withTitle: "OK")
         myPopup.runModal()
     }
 }
