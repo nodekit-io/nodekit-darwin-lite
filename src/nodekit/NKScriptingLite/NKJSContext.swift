@@ -203,7 +203,7 @@ extension NKJSContext: NKScriptContext {
        
         }
        
-        return "'\(obj!.description)'"
+        return "'\(obj!)'"
     }
     
     public func stop() -> Void {
