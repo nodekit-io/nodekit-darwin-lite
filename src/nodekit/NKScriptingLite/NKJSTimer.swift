@@ -89,7 +89,7 @@ import JavaScriptCore
         return uuid
     }
     
-    func callJsCallback(_ timer: Timer) {
+    @objc func callJsCallback(_ timer: Timer) {
         
         guard let userInfo = timer.userInfo as? [String: AnyObject],
               let uuid = userInfo["uuid"] as? String,

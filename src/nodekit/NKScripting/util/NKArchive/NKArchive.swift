@@ -121,7 +121,6 @@ public extension NKArchive {
         let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
         
         return NKAR_Uncompressor.uncompressWithFileBytes(_cdir, fromBytes: bytes)
-        
     }
     
     func dataForFileWithArchiveData(_ filename: String, data: Data) -> Data? {
@@ -129,20 +128,17 @@ public extension NKArchive {
         guard let _cdir = self.getDirectory_(filename) else  { return nil }
         
         return NKAR_Uncompressor.uncompressWithArchiveData(_cdir, data: data)
-        
     }
     
     
     func exists(_ filename: String) -> Bool {
         
         if (self.getDirectory_(filename) != nil) {return true} else { return false }
-        
     }
     
     var files: [String] {
         
         return Array(self._cdirs.keys)
-        
     }
     
     func containsFile(_ file: String) -> Bool {

@@ -230,7 +230,7 @@ open class NKLogging {
         
         if level == nil, let ch = msg.characters.first, let l = Level(symbol: ch) {
             
-            msg = msg[msg.characters.index(after: msg.startIndex) ..< msg.endIndex]
+            msg = String(msg[msg.characters.index(after: msg.startIndex) ..< msg.endIndex])
             
             lvl = l
         }

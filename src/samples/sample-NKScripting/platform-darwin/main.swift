@@ -18,7 +18,7 @@
 
 import Cocoa
 
-let app      = NSApplication.shared()
+let app      = NSApplication.shared
 let delegate = SampleAppDelegate()
 app.delegate = delegate
 app.setActivationPolicy(.accessory)

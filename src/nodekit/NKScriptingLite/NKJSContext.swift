@@ -52,7 +52,9 @@ open class NKJSContext: NSObject {
             let column: Any = value?.objectForKeyedSubscript("column") ?? "Unknown"
             let moreInfo = "in method \(stacktrace) Line number: \(lineNumber), column: \(column)"
             
-            NKLogging.log("JavaScript Error: \(value) \(moreInfo)")
+            let errorString = value.map { $0.description } ?? "null"
+            
+            NKLogging.log("JavaScript Error: \(errorString) \(moreInfo)")
         }
         
         let scriptingBridge = JSValue(newObjectIn: _jsContext)

@@ -27,7 +27,7 @@ class SampleAppDelegate: NSObject, NSApplicationDelegate {
 
      override init() {
         
-        statusItem = NSStatusBar.system().statusItem(withLength: 24)
+        statusItem = NSStatusBar.system.statusItem(withLength: 24)
         
         scriptContextDelegate = SampleScriptDelegate()
         
@@ -39,15 +39,15 @@ class SampleAppDelegate: NSObject, NSApplicationDelegate {
         
     }
     
-    func quitApp(_ sender: AnyObject) {
+    @objc func quitApp(_ sender: AnyObject) {
         
-        NSApplication.shared().terminate(self)
+        NSApplication.shared.terminate(self)
         
     }
 
     func setupStatusMenu() {
         
-            statusItem.image = NSImage(named: "MenuIcon")
+            statusItem.image = NSImage(named: NSImage.Name(rawValue: "MenuIcon"))
         
             statusItem.title = "";
         
