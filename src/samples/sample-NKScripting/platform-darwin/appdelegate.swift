@@ -19,6 +19,8 @@
 import Cocoa
 import NKScripting
 
+fileprivate let cycleEnginePeriodically = false
+
 class SampleAppDelegate: NSObject, NSApplicationDelegate, NKScriptContextDelegate {
     
     fileprivate let statusItem: NSStatusItem
@@ -78,12 +80,14 @@ class SampleAppDelegate: NSObject, NSApplicationDelegate, NKScriptContextDelegat
         
         self.context = context
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10) {
-            
-            self.context?.stop()
-            self.context = nil
-            
-            self.startNodeKitScripting()
+        if cycleEnginePeriodically {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+                
+                self.context?.stop()
+                self.context = nil
+                
+                self.startNodeKitScripting()
+            }
         }
     }
     
