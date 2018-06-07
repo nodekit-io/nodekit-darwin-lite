@@ -150,7 +150,7 @@ extension NKJSContext: NKScriptContext {
             if let proxy = plugin as? NKNativeProxy {
                 proxy.nkScriptObject = nil
             }
-            if let disposable = plugin as? Disposable {
+            if let disposable = plugin as? NKDisposable {
                 disposable.dispose()
             }
         }

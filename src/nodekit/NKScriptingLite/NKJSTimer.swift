@@ -32,7 +32,7 @@ import JavaScriptCore
 }
 
 
-@objc class NKJSTimer: NSObject, TimerJSExport, NKNativePlugin, Disposable {
+@objc class NKJSTimer: NSObject, TimerJSExport, NKNativePlugin, NKDisposable {
     
     let namespace: String = "NodeKitTimer"
     let options: [String : AnyObject] = [

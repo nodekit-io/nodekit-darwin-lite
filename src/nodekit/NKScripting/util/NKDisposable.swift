@@ -1,5 +1,5 @@
 //
-//  Disposable.swift
+//  NKDisposable.swift
 //  NKScriptingLite
 //
 //  Created by Patrick Goley on 6/7/18.
@@ -11,7 +11,7 @@
  needs to perform cleanup on engine tear-down, such as
  timers, filehandles, etc.
  */
-protocol Disposable {
+protocol NKDisposable {
     
     func dispose()
 }
