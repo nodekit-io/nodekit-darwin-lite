@@ -154,11 +154,11 @@ extension NKJSContext: NKScriptContext {
                 disposable.dispose()
             }
         }
-        
+
         for script in sources.values {
             script.eject()
         }
-        
+
         plugins.removeAll()
         sources.removeAll()
     }
