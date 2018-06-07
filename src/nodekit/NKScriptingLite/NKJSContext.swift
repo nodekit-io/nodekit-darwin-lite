@@ -255,13 +255,3 @@ extension NKJSContext: NKScriptContext {
         return selfjsv
     }
 }
-
-public extension NSObject {
-    
-    var NKscriptObject: JSValue? {
-        
-        return objc_getAssociatedObject(self, Unmanaged<AnyObject>.passUnretained(JSValue.self).toOpaque()) as? JSValue
-        
-    }
-    
-}
