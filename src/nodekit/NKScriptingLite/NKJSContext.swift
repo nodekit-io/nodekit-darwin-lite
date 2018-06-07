@@ -22,8 +22,6 @@ import JavaScriptCore
 
 open class NKJSContext: NSObject {
     
-    fileprivate let nodeKitTimerKey = "NodeKitTimer"
-    
     fileprivate let _jsContext: JSContext
     fileprivate let _id: Int
     
@@ -35,7 +33,6 @@ open class NKJSContext: NSObject {
         _id = id
         super.init()
     }
-    
     
     internal func prepareEnvironment() -> Void {
         
@@ -91,21 +88,13 @@ open class NKJSContext: NSObject {
             )
         )
         
-        guard let timerSource = NKStorage.getResource("lib-scripting.nkar/lib-scripting/timer.js", NKJSContext.self) else {
+        guard let _ = NKStorage.getResource("lib-scripting.nkar/lib-scripting/timer.js", NKJSContext.self) else {
             NKLogging.die("Failed to read provision script: timer")
         }
         
-        self.injectJavaScript(
-            NKScriptSource(
-                source: timerSource,
-                asFilename: "io.nodekit.scripting/NKScripting/timer.js",
-                namespace: "Timer"
-            )
-        )
-        
-        self._jsContext.setObject(NKJSTimer(), forKeyedSubscript: nodeKitTimerKey as NSString)
-        
         NKStorage.attachTo(self)
+        
+        loadPlugin(NKJSTimer())
     }
 }
 
@@ -117,7 +106,10 @@ extension NKJSContext: NKScriptContext {
 
     public func loadPlugin(_ plugin: NKNativePlugin) -> Void {
     
-        self.setObjectForNamespace(plugin, namespace: plugin.namespace)
+        if let jsValue = setObjectForNamespace(plugin, namespace: plugin.namespace),
+            let proxy = plugin as? NKNativeProxy {
+            proxy.nkScriptObject = jsValue
+        }
         
         NKLogging.log("+Plugin object \(plugin) is bound to \(plugin.namespace) with NKScriptingLite (JSExport) channel")
         
@@ -127,16 +119,21 @@ extension NKJSContext: NKScriptContext {
         
         guard let js = NKStorage.getResource(jspath, type(of: plugin)) else { return; }
         
-        self.injectJavaScript(NKScriptSource(source: js, asFilename: jspath))
+        self.injectJavaScript(
+            NKScriptSource(
+                source: js,
+                asFilename: jspath,
+                namespace: plugin.namespace
+            )
+        )
     }
 
     public func injectJavaScript(_ script: NKScriptSource) -> Void {
         
         script.inject(self)
       
-        objc_setAssociatedObject(self, Unmanaged.passUnretained(script).toOpaque(), script, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        sources[script.filename] = script
     }
-
 
     public func evaluateJavaScript(_ javaScriptString: String,
         completionHandler: ((AnyObject?,
@@ -145,8 +142,25 @@ extension NKJSContext: NKScriptContext {
         let result = self._jsContext.evaluateScript(javaScriptString)
         
         completionHandler?(result, nil)
+    }
+    
+    public func stop() -> Void {
         
+        for plugin in plugins.values {
+            if let proxy = plugin as? NKNativeProxy {
+                proxy.nkScriptObject = nil
+            }
+            if let disposable = plugin as? Disposable {
+                disposable.dispose()
+            }
+        }
         
+        for script in sources.values {
+            script.eject()
+        }
+        
+        plugins.removeAll()
+        sources.removeAll()
     }
 
     public func serialize(_ object: AnyObject?) -> String {
@@ -156,10 +170,8 @@ extension NKJSContext: NKScriptContext {
         if let val = obj as? NSValue {
         
             obj = val as? NSNumber ?? val.nonretainedObjectValue as AnyObject?
-       
         }
 
-        
         if let s = obj as? String {
          
             let d = try? JSONSerialization.data(withJSONObject: [s], options: JSONSerialization.WritingOptions(rawValue: 0))
@@ -173,7 +185,6 @@ extension NKJSContext: NKScriptContext {
             if CFGetTypeID(n) == CFBooleanGetTypeID() {
             
                 return n.boolValue.description
-            
             }
             
             return n.stringValue
@@ -206,17 +217,9 @@ extension NKJSContext: NKScriptContext {
        
         return "'\(obj!)'"
     }
-    
-    public func stop() -> Void {
-        
-        if let timer = _jsContext.objectForKeyedSubscript(nodeKitTimerKey).toObject() as? NKJSTimer {
-            
-            timer.invalidateAll()
-        }
-    }
 
     // private methods
-    fileprivate func setObjectForNamespace(_ object: AnyObject, namespace: String) -> Void {
+    fileprivate func setObjectForNamespace(_ object: AnyObject, namespace: String) -> JSValue? {
 
         let global = _jsContext.globalObject
 
@@ -228,8 +231,7 @@ extension NKJSContext: NKScriptContext {
         
             _jsContext.setObject(object, forKeyedSubscript: lastItem as NSString)
             
-            return
-        
+            return nil
         }
 
         let jsv = fullNameArr.reduce(global, {previous, current in
@@ -237,7 +239,6 @@ extension NKJSContext: NKScriptContext {
             if (previous?.hasProperty(current))! {
             
                 return previous?.objectForKeyedSubscript(current)
-           
             }
             
             let _jsv = JSValue(newObjectIn: _jsContext)
@@ -251,8 +252,7 @@ extension NKJSContext: NKScriptContext {
         
         let selfjsv = (jsv?.objectForKeyedSubscript(lastItem))! as JSValue
         
-        objc_setAssociatedObject(object, Unmanaged<AnyObject>.passUnretained(JSValue.self).toOpaque(), selfjsv, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        
+        return selfjsv
     }
 }
 

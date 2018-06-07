@@ -32,7 +32,12 @@ import JavaScriptCore
 }
 
 
-@objc class NKJSTimer: NSObject, TimerJSExport {
+@objc class NKJSTimer: NSObject, TimerJSExport, NKNativePlugin, Disposable {
+    
+    let namespace: String = "NodeKitTimer"
+    let options: [String : AnyObject] = [
+        "js": "lib-scripting.nkar/lib-scripting/timer.js" as NSString
+    ]
     
     var timers = [String: Timer]()
     var callbacks = [String: JSValue]()
@@ -56,7 +61,12 @@ import JavaScriptCore
         return createTimer(callback, milliseconds: milliseconds , repeats: false)
     }
     
-    func invalidateAll() {
+    func dispose() {
+        
+        invalidateAll()
+    }
+    
+    private func invalidateAll() {
         
         timers.forEach({$0.1.invalidate()})
         timers.removeAll()
