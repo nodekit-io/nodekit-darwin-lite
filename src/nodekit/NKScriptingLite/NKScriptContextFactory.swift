@@ -25,7 +25,6 @@ public enum NKEngineType: Int {
     case nitro = 1
     
     case uiWebView = 2
-
 }
 
 open class NKScriptContextFactory: NSObject {

@@ -35,7 +35,6 @@ public protocol NKScriptContext: class {
     func serialize(_ object: AnyObject?) -> String
 
     func stop() -> Void
-    
 }
 
 public protocol NKScriptContextDelegate: class {
@@ -43,7 +42,6 @@ public protocol NKScriptContextDelegate: class {
     func NKScriptEngineDidLoad(_ context: NKScriptContext) -> Void
     
     func NKScriptEngineReady(_ context: NKScriptContext) -> Void
-
 }
 
 public enum NKScriptExportType: Int {
@@ -51,7 +49,6 @@ public enum NKScriptExportType: Int {
     case nkScriptExport = 0
     
     case jsExport
-    
 }
 
 public typealias NKScriptExport = JSExport
