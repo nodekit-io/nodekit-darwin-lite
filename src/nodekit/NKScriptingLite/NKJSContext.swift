@@ -27,6 +27,9 @@ open class NKJSContext: NSObject {
     fileprivate let _jsContext: JSContext
     fileprivate let _id: Int
     
+    private var plugins: [String: NKNativePlugin] = [:] //namespace -> plugin
+    private var sources: [String: NKScriptSource] = [:] //filename -> source
+    
     internal init(_ jsContext: JSContext, id: Int) {
         _jsContext = jsContext
         _id = id
@@ -59,8 +62,8 @@ open class NKJSContext: NSObject {
         
         let scriptingBridge = JSValue(newObjectIn: _jsContext)
         
-        scriptingBridge?.setObject(unsafeBitCast(logjs, to: AnyObject.self), forKeyedSubscript: "log" as (NSCopying & NSObjectProtocol)!)
-        _jsContext.setObject(unsafeBitCast(scriptingBridge, to: AnyObject.self), forKeyedSubscript: "NKScriptingBridge" as (NSCopying & NSObjectProtocol)!)
+        scriptingBridge?.setObject(unsafeBitCast(logjs, to: AnyObject.self), forKeyedSubscript: "log" as NSString)
+        _jsContext.setObject(unsafeBitCast(scriptingBridge, to: AnyObject.self), forKeyedSubscript: "NKScriptingBridge" as NSString)
 
         let setTimeout: @convention(block) (JSValue, Int) -> () =
             { callback, timeout in
@@ -68,7 +71,7 @@ open class NKJSContext: NSObject {
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(timeVal) / Double(NSEC_PER_SEC), execute: { callback.call(withArguments: nil)})
         }
         
-        self._jsContext.setObject(unsafeBitCast(setTimeout, to: AnyObject.self), forKeyedSubscript: "setTimeout" as (NSCopying & NSObjectProtocol)!)
+        self._jsContext.setObject(unsafeBitCast(setTimeout, to: AnyObject.self), forKeyedSubscript: "setTimeout" as NSString)
         
         let appjs = NKStorage.getResource("lib-scripting.nkar/lib-scripting/init_jsc.js", NKJSContext.self)
         
@@ -100,7 +103,7 @@ open class NKJSContext: NSObject {
             )
         )
         
-        self._jsContext.setObject(NKJSTimer(), forKeyedSubscript: nodeKitTimerKey as (NSCopying & NSObjectProtocol)!)
+        self._jsContext.setObject(NKJSTimer(), forKeyedSubscript: nodeKitTimerKey as NSString)
         
         NKStorage.attachTo(self)
     }
@@ -112,20 +115,19 @@ extension NKJSContext: NKScriptContext {
         get { return self._id }
     }
 
-    public func loadPlugin(_ object: AnyObject, namespace: String, options: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>() ) -> Void {
+    public func loadPlugin(_ plugin: NKNativePlugin) -> Void {
     
-        self.setObjectForNamespace(object, namespace: namespace)
+        self.setObjectForNamespace(plugin, namespace: plugin.namespace)
         
-        NKLogging.log("+Plugin object \(object) is bound to \(namespace) with NKScriptingLite (JSExport) channel")
+        NKLogging.log("+Plugin object \(plugin) is bound to \(plugin.namespace) with NKScriptingLite (JSExport) channel")
         
-        objc_setAssociatedObject(self, Unmanaged.passUnretained(object).toOpaque(), object, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        plugins[plugin.namespace] = plugin
         
-        guard let jspath: String = options["js"] as? String else { return; }
+        guard let jspath: String = plugin.options["js"] as? String else { return; }
         
-        guard let js = NKStorage.getResource(jspath, type(of: object)) else { return; }
+        guard let js = NKStorage.getResource(jspath, type(of: plugin)) else { return; }
         
         self.injectJavaScript(NKScriptSource(source: js, asFilename: jspath))
-
     }
 
     public func injectJavaScript(_ script: NKScriptSource) -> Void {
@@ -133,7 +135,6 @@ extension NKJSContext: NKScriptContext {
         script.inject(self)
       
         objc_setAssociatedObject(self, Unmanaged.passUnretained(script).toOpaque(), script, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        
     }
 
 
@@ -219,13 +220,13 @@ extension NKJSContext: NKScriptContext {
 
         let global = _jsContext.globalObject
 
-        var fullNameArr = namespace.characters.split {$0 == "."}.map(String.init)
+        var fullNameArr = namespace.split {$0 == "."}.map(String.init)
         
         let lastItem = fullNameArr.removeLast()
         
         if (fullNameArr.isEmpty) {
         
-            _jsContext.setObject(object, forKeyedSubscript: lastItem as (NSCopying & NSObjectProtocol)!)
+            _jsContext.setObject(object, forKeyedSubscript: lastItem as NSString)
             
             return
         
@@ -241,12 +242,12 @@ extension NKJSContext: NKScriptContext {
             
             let _jsv = JSValue(newObjectIn: _jsContext)
             
-            previous?.setObject(_jsv, forKeyedSubscript: current as (NSCopying & NSObjectProtocol)!)
+            previous?.setObject(_jsv, forKeyedSubscript: current as NSString)
             
             return _jsv
         })
         
-        jsv?.setObject(object, forKeyedSubscript: lastItem as (NSCopying & NSObjectProtocol)!)
+        jsv?.setObject(object, forKeyedSubscript: lastItem as NSString)
         
         let selfjsv = (jsv?.objectForKeyedSubscript(lastItem))! as JSValue
         

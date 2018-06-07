@@ -53,7 +53,7 @@ open class NKScriptSource: NSObject {
             self.namespace = nil
             
             self.cleanup = nil
-        
+
         }
 
         if (filename == "") {

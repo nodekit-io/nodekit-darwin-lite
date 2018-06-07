@@ -228,9 +228,9 @@ open class NKLogging {
         
         let labels = labels ?? [:]
         
-        if level == nil, let ch = msg.characters.first, let l = Level(symbol: ch) {
+        if level == nil, let ch = msg.first, let l = Level(symbol: ch) {
             
-            msg = String(msg[msg.characters.index(after: msg.startIndex) ..< msg.endIndex])
+            msg = String(msg[msg.index(after: msg.startIndex) ..< msg.endIndex])
             
             lvl = l
         }

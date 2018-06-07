@@ -26,7 +26,7 @@ public protocol NKScriptContext: class {
     
     var id: Int { get }
 
-    func loadPlugin(_ object: AnyObject, namespace: String, options: Dictionary<String, AnyObject>) -> Void
+    func loadPlugin(_ object: NKNativePlugin) -> Void
     
     func injectJavaScript(_ script: NKScriptSource) -> Void
     
