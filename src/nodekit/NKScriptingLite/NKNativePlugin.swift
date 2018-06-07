@@ -23,7 +23,7 @@ import JavaScriptCore
 
 /*
  A native object that can proxy native method calls to it's cooresponding
- JSValue. This property will be nil after the NKScriptContext is disposed
+ JSValue. This property will become nil after the NKScriptContext is disposed
  to break any retain cycles.
  */
 @objc public protocol NKNativeProxy: AnyObject {
