@@ -184,7 +184,7 @@ public extension NKArchive {
         
         var foldername = foldername;
         
-        if (foldername.characters.last != "/")
+        if (foldername.last != "/")
         {
             foldername = foldername + "/";
         }
@@ -194,7 +194,7 @@ public extension NKArchive {
         let items = self.files.filter({(item: String) -> Bool in
             return item.lowercased().hasPrefix(foldername.lowercased()) &&
                 ((item as NSString).pathComponents.count == depth) &&
-                (item.characters.last == "/")
+                (item.last == "/")
         })
         
         return items.map({(item: String) -> String in
