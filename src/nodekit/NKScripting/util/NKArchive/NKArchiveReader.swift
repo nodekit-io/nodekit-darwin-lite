@@ -44,9 +44,9 @@ public extension NKArchiveReader {
         
         if let nkArchive = _cacheCDirs.object(forKey: archive as NSString) {
             
-            if let data = _cacheArchiveData.object(forKey: archive as NSString) as? Data {
+            if let data = _cacheArchiveData.object(forKey: archive as NSString) {
                 
-                return nkArchive[filename, withArchiveData: data]
+                return nkArchive[filename, withArchiveData: data as Data]
                 
             } else
                 

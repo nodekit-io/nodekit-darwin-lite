@@ -42,18 +42,17 @@ open class NKScriptSource: NSObject {
             
             self.namespace = namespace
        
-        } else if (namespace != nil) {
+        } else if let namespace = namespace {
 
-            self.cleanup = "delete \(namespace!)"
+            self.cleanup = "delete \(namespace)"
             
-            self.namespace = namespace!
+            self.namespace = namespace
       
         } else {
         
             self.namespace = nil
             
             self.cleanup = nil
-        
         }
 
         if (filename == "") {
@@ -63,15 +62,12 @@ open class NKScriptSource: NSObject {
         } else {
         
             self.source = source + "\r\n//# sourceURL=" + filename + "\r\n"
-        
         }
-
     }
     
     deinit {
         
         eject()
-        
     }
     
     internal func inject(_ context: NKScriptContext) {
@@ -81,21 +77,17 @@ open class NKScriptSource: NSObject {
         context.evaluateJavaScript(source, completionHandler: nil)
         
         NKLogging.log("+E\(context.id) Injected \(filename) ")
-        
     }
     
-    fileprivate func eject() {
+    internal func eject() {
         
         guard let context = context else { return }
         
         if let cleanup = cleanup {
             
             context.evaluateJavaScript(cleanup, completionHandler: nil)
-            
         }
         
         self.context =  nil
-
     }
-
 }

@@ -1,4 +1,6 @@
-/**
+/*
+ * nodekit.io
+ *
  * Copyright (c) 2016 OffGrid Networks. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +16,12 @@
  * limitations under the License.
  */
 
-io.nodekit.test.logconsole("STARTING SAMPLE SCRIPTING APPLICATION");
-
-
-var subIndex = require("./subdirectory");
-
-io.nodekit.test.logconsole("subdirectory/index.js: " + subIndex);
-
-var functionExport = require("./function_export");
-
-functionExport()
-
-setInterval(function() {
-            
-    io.nodekit.test.logconsole("interval fire");
-    io.nodekit.test.logconsole("native set property: " + io.nodekit.test.nativeKey);
-            
-}, 2000)
+/*
+ Should be implemented by any NKNativePlugin object that
+ needs to perform cleanup on engine tear-down, such as
+ timers, filehandles, etc.
+ */
+protocol NKDisposable {
+    
+    func dispose()
+}

@@ -33,9 +33,15 @@ import JavaScriptCore
 
 }
 
-open class NKStorage: NSObject {
+open class NKStorage: NSObject, NKNativePlugin {
     
     // PUBLIC METHODS NATIVE SIDE ONLY
+    
+    public let namespace = "io.nodekit.scripting.storage"
+    
+    public var options: [String : AnyObject] = [
+        "js": "lib-scripting.nkar/lib-scripting/native_module.js" as NSString
+    ]
     
     open static var mainBundle = NKStorage.mainBundle_()
 
@@ -462,10 +468,7 @@ extension NKStorage:  NKStorageExport {
     
     class func attachTo(_ context: NKScriptContext) {
         
-        context.loadPlugin(NKStorage(), namespace: "io.nodekit.scripting.storage", options: ["js": "lib-scripting.nkar/lib-scripting/native_module.js" as NSString])
-        
+        context.loadPlugin(NKStorage())
     }
-    
-
 }
 

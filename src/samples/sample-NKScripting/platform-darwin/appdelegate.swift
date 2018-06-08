@@ -19,24 +19,23 @@
 import Cocoa
 import NKScripting
 
-class SampleAppDelegate: NSObject, NSApplicationDelegate {
+fileprivate let cycleEnginePeriodically = false
+
+class SampleAppDelegate: NSObject, NSApplicationDelegate, NKScriptContextDelegate {
     
     fileprivate let statusItem: NSStatusItem
     
-    fileprivate let scriptContextDelegate : NKScriptContextDelegate
+    var context: NKScriptContext?
 
-     override init() {
+    override init() {
         
         statusItem = NSStatusBar.system.statusItem(withLength: 24)
-        
-        scriptContextDelegate = SampleScriptDelegate()
         
         super.init()
         
         setupStatusMenu()
         
         startNodeKitScripting()
-        
     }
     
     @objc func quitApp(_ sender: AnyObject) {
@@ -70,8 +69,30 @@ class SampleAppDelegate: NSObject, NSApplicationDelegate {
         "Engine":  NKEngineType.javaScriptCore.rawValue as NSNumber
         ]
         
-        NKScriptContextFactory().createScriptContext(options, delegate: self.scriptContextDelegate)
-        
+        NKScriptContextFactory().createScriptContext(options, delegate: self)
     }
-
+    
+    func NKScriptEngineDidLoad(_ context: NKScriptContext) -> Void {
+        
+        SamplePlugin.attachTo(context)
+        
+        context.injectJavaScript(NKScriptSource(source: "process.bootstrap('app/index.js');", asFilename: "boot"))
+        
+        self.context = context
+        
+        if cycleEnginePeriodically {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+                
+                self.context?.stop()
+                self.context = nil
+                
+                self.startNodeKitScripting()
+            }
+        }
+    }
+    
+    func NKScriptEngineReady(_ context: NKScriptContext) -> Void {
+        
+        NKEventEmitter.global.emit("nk.jsApplicationReady", "" as AnyObject)
+    }
 }

@@ -23,7 +23,6 @@ extension NKScriptContextFactory {
 
     func createContextJavaScriptCore(_ options: [String: AnyObject] = Dictionary<String, AnyObject>(), delegate cb: NKScriptContextDelegate) {
     
-    //  dispatch_async(NKScriptContextFactory.defaultQueue) {
       DispatchQueue.main.async {
         
             let vm = JSVirtualMachine()
@@ -58,7 +57,5 @@ extension JSContext: NKScriptContextHost {
         cb.NKScriptEngineDidLoad(context)
         
         cb.NKScriptEngineReady(context)
-        
     }
-    
 }

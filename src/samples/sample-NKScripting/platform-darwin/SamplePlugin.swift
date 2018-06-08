@@ -21,15 +21,30 @@ import Cocoa
 import WebKit
 import NKScripting
 
-@objc protocol SamplePluginProtocol: NKScriptExport {
+@objc protocol SamplePluginProtocol: NKScriptExport, NKNativePlugin, NKNativeProxy {
     func logconsole(_ text: AnyObject?) -> Void
     func alertSync(_ text: AnyObject?) -> String
 }
 
 
 class SamplePlugin: NSObject, SamplePluginProtocol {
+    
+    let namespace: String = "io.nodekit.test"
+    let options: [String : AnyObject] = [
+        "PluginBridge": NKScriptExportType.nkScriptExport.rawValue as NSNumber
+    ]
+    
+    var nkScriptObject: JSValue? {
+        
+        didSet {
+            guard let val = nkScriptObject else { return }
+            print(val)
+            val.setValue(42, forProperty: "nativeKey")
+        }
+    }
+    
     class func attachTo(_ context: NKScriptContext) {
-        context.loadPlugin(SamplePlugin(), namespace: "io.nodekit.test", options: ["PluginBridge": NKScriptExportType.nkScriptExport.rawValue as NSNumber])
+        context.loadPlugin(SamplePlugin())
     }
 
     func logconsole(_ text: AnyObject?) -> Void {
