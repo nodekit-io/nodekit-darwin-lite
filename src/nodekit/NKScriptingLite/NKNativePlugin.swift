@@ -21,14 +21,14 @@ import JavaScriptCore
 /*
  A native object that will be registered under global[namespace] and
  callable from JavaScript.
- Options can include a JavaScript source file to be loaded like so:
- ["js": "path/to/file.js" as NSString]
+ The path to a cooresponding JavaScript file can be supplied under sourceJS
+ if needed. This file will be evaluated after the plugin is loaded.
  */
 @objc public protocol NKNativePlugin: AnyObject {
     
     var namespace: String { get }
     
-    var options: [String: AnyObject] { get }
+    var sourceJS: String? { get }
 }
 
 /*

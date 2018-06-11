@@ -38,10 +38,7 @@ open class NKStorage: NSObject, NKNativePlugin {
     // PUBLIC METHODS NATIVE SIDE ONLY
     
     public let namespace = "io.nodekit.scripting.storage"
-    
-    public var options: [String : AnyObject] = [
-        "js": "lib-scripting.nkar/lib-scripting/native_module.js" as NSString
-    ]
+    public let sourceJS: String? = "lib-scripting.nkar/lib-scripting/native_module.js"
     
     open static var mainBundle = NKStorage.mainBundle_()
 

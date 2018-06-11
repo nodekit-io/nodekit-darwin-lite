@@ -34,10 +34,8 @@ import JavaScriptCore
 
 @objc class NKJSTimer: NSObject, TimerJSExport, NKNativePlugin, NKDisposable {
     
-    let namespace: String = "NodeKitTimer"
-    let options: [String : AnyObject] = [
-        "js": "lib-scripting.nkar/lib-scripting/timer.js" as NSString
-    ]
+    public let namespace: String = "NodeKitTimer"
+    public let sourceJS: String? = "lib-scripting.nkar/lib-scripting/timer.js"
     
     var timers = [String: Timer]()
     var callbacks = [String: JSValue]()
