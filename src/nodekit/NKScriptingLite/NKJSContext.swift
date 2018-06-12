@@ -115,9 +115,9 @@ extension NKJSContext: NKScriptContext {
         
         plugins[plugin.namespace] = plugin
         
-        guard let jspath: String = plugin.options["js"] as? String else { return; }
+        guard let jspath: String = plugin.sourceJS else { return }
         
-        guard let js = NKStorage.getResource(jspath, type(of: plugin)) else { return; }
+        guard let js = NKStorage.getResource(jspath, type(of: plugin)) else { return }
         
         self.injectJavaScript(
             NKScriptSource(

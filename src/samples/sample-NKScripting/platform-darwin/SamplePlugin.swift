@@ -30,9 +30,7 @@ import NKScripting
 class SamplePlugin: NSObject, SamplePluginProtocol {
     
     let namespace: String = "io.nodekit.test"
-    let options: [String : AnyObject] = [
-        "PluginBridge": NKScriptExportType.nkScriptExport.rawValue as NSNumber
-    ]
+    let sourceJS: String? = nil
     
     var nkScriptObject: JSValue? {
         
@@ -48,7 +46,7 @@ class SamplePlugin: NSObject, SamplePluginProtocol {
     }
 
     func logconsole(_ text: AnyObject?) -> Void {
-        print(text as? String! ?? "")
+        print(text as? String ?? "")
     }
 
     func alertSync(_ text: AnyObject?) -> String {
