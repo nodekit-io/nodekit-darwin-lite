@@ -26,8 +26,14 @@ var functionExport = require("./function_export");
 functionExport()
 
 setInterval(function() {
-            
+
     io.nodekit.test.logconsole("interval fire");
     io.nodekit.test.logconsole("native set property: " + io.nodekit.test.nativeKey);
-            
+
 }, 2000)
+
+var timerId = setTimeout(function() {
+            
+    io.nodekit.test.logconsole("timeout fire " + timerId);
+    
+}, 1000)

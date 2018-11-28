@@ -61,14 +61,6 @@ open class NKJSContext: NSObject {
         
         scriptingBridge?.setObject(unsafeBitCast(logjs, to: AnyObject.self), forKeyedSubscript: "log" as NSString)
         _jsContext.setObject(unsafeBitCast(scriptingBridge, to: AnyObject.self), forKeyedSubscript: "NKScriptingBridge" as NSString)
-
-        let setTimeout: @convention(block) (JSValue, Int) -> () =
-            { callback, timeout in
-                let timeVal = Int64(Double(timeout) * Double(NSEC_PER_MSEC))
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(timeVal) / Double(NSEC_PER_SEC), execute: { callback.call(withArguments: nil)})
-        }
-        
-        self._jsContext.setObject(unsafeBitCast(setTimeout, to: AnyObject.self), forKeyedSubscript: "setTimeout" as NSString)
         
         let appjs = NKStorage.getResource("lib-scripting.nkar/lib-scripting/init_jsc.js", NKJSContext.self)
         

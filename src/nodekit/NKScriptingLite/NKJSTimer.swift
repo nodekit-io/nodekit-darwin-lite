@@ -76,23 +76,21 @@ import JavaScriptCore
         let timeInterval  = milliseconds / 1000.0
         
         let uuid = UUID().uuidString
-    
-        DispatchQueue.main.async {
-            
-            let userInfo: [String: AnyObject] = [
-                "repeats": NSNumber(value: repeats as Bool),
-                "uuid": uuid as AnyObject
-            ]
-            
-            self.callbacks[uuid] = callback
-            
-            let timer = Timer.scheduledTimer(timeInterval: timeInterval,
-                                                               target: self,
-                                                               selector: #selector(self.callJsCallback),
-                                                               userInfo: userInfo,
-                                                               repeats: repeats)
-            self.timers[uuid] = timer
-        }
+        
+        let userInfo: [String: AnyObject] = [
+            "repeats": NSNumber(value: repeats as Bool),
+            "uuid": uuid as AnyObject
+        ]
+        
+        self.callbacks[uuid] = callback
+        
+        let timer = Timer.scheduledTimer(timeInterval: timeInterval,
+                                         target: self,
+                                         selector: #selector(self.callJsCallback),
+                                         userInfo: userInfo,
+                                         repeats: repeats)
+        
+        self.timers[uuid] = timer
         
         return uuid
     }
