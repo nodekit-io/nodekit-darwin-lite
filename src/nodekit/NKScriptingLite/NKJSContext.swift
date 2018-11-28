@@ -59,8 +59,8 @@ open class NKJSContext: NSObject {
         
         let scriptingBridge = JSValue(newObjectIn: _jsContext)
         
-        scriptingBridge?.setObject(unsafeBitCast(logjs, to: AnyObject.self), forKeyedSubscript: "log" as NSString)
-        _jsContext.setObject(unsafeBitCast(scriptingBridge, to: AnyObject.self), forKeyedSubscript: "NKScriptingBridge" as NSString)
+        scriptingBridge?.setObject(logjs as AnyObject, forKeyedSubscript: "log" as NSString)
+        _jsContext.setObject(scriptingBridge, forKeyedSubscript: "NKScriptingBridge" as NSString)
         
         let appjs = NKStorage.getResource("lib-scripting.nkar/lib-scripting/init_jsc.js", NKJSContext.self)
         
