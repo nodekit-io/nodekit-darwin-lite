@@ -57,6 +57,12 @@ open class NKJSContext: NSObject {
             NKLogging.log("JavaScript Error: \(errorString) \(moreInfo)")
         }
         
+        guard let _ = NKStorage.getResource("lib-scripting.nkar/lib-scripting/timer.js", NKJSContext.self) else {
+            NKLogging.die("Failed to read provision script: timer")
+        }
+        
+        loadPlugin(NKJSTimer())
+        
         let scriptingBridge = JSValue(newObjectIn: _jsContext)
         
         scriptingBridge?.setObject(logjs as AnyObject, forKeyedSubscript: "log" as NSString)
@@ -80,13 +86,7 @@ open class NKJSContext: NSObject {
             )
         )
         
-        guard let _ = NKStorage.getResource("lib-scripting.nkar/lib-scripting/timer.js", NKJSContext.self) else {
-            NKLogging.die("Failed to read provision script: timer")
-        }
-        
         NKStorage.attachTo(self)
-        
-        loadPlugin(NKJSTimer())
     }
 }
 

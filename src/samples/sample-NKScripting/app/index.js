@@ -37,3 +37,5 @@ var timerId = setTimeout(function() {
     io.nodekit.test.logconsole("timeout fire " + timerId);
     
 }, 1000)
+
+clearTimeout(timerId)
