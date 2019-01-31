@@ -101,7 +101,9 @@ extension NKAR_BytesReader {
         
         let buffp = UnsafeBufferPointer<UInt8>(start: bytes.advanced(by: index), count: len)
         
-        let s = String(bytes: buffp.makeIterator(), encoding: String.Encoding.utf8)
+        let bytesSequence = AnySequence(buffp.makeIterator)
+        
+        let s = String(bytes: bytesSequence, encoding: String.Encoding.utf8)
         
         index += len
         

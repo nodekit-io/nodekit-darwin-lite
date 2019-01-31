@@ -62,7 +62,7 @@ open class NKArchive {
         
     }
     
-    open static func createFromData(_ path: String, data: Data) -> NKArchive? {
+    public static func createFromData(_ path: String, data: Data) -> NKArchive? {
         
         let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
         

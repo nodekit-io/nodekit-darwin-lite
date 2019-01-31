@@ -72,7 +72,7 @@ open class NKEventSubscriptionGeneric<T>: NKEventSubscription {
 open class NKEventEmitter: NSObject {
 
     // global EventEmitter that is actually a signal emitter (retains early triggers without subscriptions until once is called)
-    open static var global: NKEventEmitter = NKSignalEmitter()
+    public static var global: NKEventEmitter = NKSignalEmitter()
 
     fileprivate var currentSubscription: NKEventSubscription?
 
