@@ -46,7 +46,7 @@ open class NKArchive {
             
             else { return nil }
         
-        let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
+        let bytes = (data as NSData).bytes.assumingMemoryBound(to: UInt8.self)
         
         let len = data.count
         
@@ -62,9 +62,9 @@ open class NKArchive {
         
     }
     
-    open static func createFromData(_ path: String, data: Data) -> NKArchive? {
+    public static func createFromData(_ path: String, data: Data) -> NKArchive? {
         
-        let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
+        let bytes = (data as NSData).bytes.assumingMemoryBound(to: UInt8.self)
         
         let len = data.count
         
@@ -118,7 +118,7 @@ public extension NKArchive {
         
         file.closeFile()
         
-        let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
+        let bytes = (data as NSData).bytes.assumingMemoryBound(to: UInt8.self)
         
         return NKAR_Uncompressor.uncompressWithFileBytes(_cdir, fromBytes: bytes)
     }

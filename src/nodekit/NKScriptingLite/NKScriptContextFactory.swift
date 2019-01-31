@@ -69,7 +69,7 @@ open class NKScriptContextFactory: NSObject {
     
     }
     
-    open static var defaultQueue: DispatchQueue = {
+    public static var defaultQueue: DispatchQueue = {
         
         let label = "io.nodekit.scripting.default-queue"
         

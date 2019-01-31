@@ -25,7 +25,7 @@ struct NKAR_Uncompressor {
     
     static func uncompressWithArchiveData(_ cdir: NKAR_CentralDirectory, data: Data) -> Data? {
         
-            let bytes = unsafeBitCast((data as NSData).bytes, to: UnsafePointer<UInt8>.self)
+        let bytes = (data as NSData).bytes.assumingMemoryBound(to: UInt8.self)
             let offsetBytes = bytes.advanced(by: Int(cdir.dataOffset))
             return uncompressWithFileBytes(cdir, fromBytes: offsetBytes)
     }

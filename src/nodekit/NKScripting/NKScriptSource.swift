@@ -22,13 +22,13 @@ import Foundation
 
 open class NKScriptSource: NSObject {
 
-    open let source: String
+    public let source: String
 
-    open let cleanup: String?
+    public let cleanup: String?
     
-    open let filename: String
+    public let filename: String
     
-    open let namespace: String?
+    public let namespace: String?
     
     open var context: NKScriptContext?
     

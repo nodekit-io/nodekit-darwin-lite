@@ -40,7 +40,7 @@ open class NKStorage: NSObject, NKNativePlugin {
     public let namespace = "io.nodekit.scripting.storage"
     public let sourceJS: String? = "lib-scripting.nkar/lib-scripting/native_module.js"
     
-    open static var mainBundle = NKStorage.mainBundle_()
+    public static var mainBundle = NKStorage.mainBundle_()
 
     open class func getResource(_ module: String, _ t: AnyClass? = nil) -> String? {
         
