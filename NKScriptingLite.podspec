@@ -10,7 +10,7 @@ s.source       = { :git => "https://github.com/nodekit-io/nodekit-darwin-lite.gi
 
 s.ios.deployment_target = '9.0'
 s.osx.deployment_target = '10.11'
-s.swift_version   = "4.2"
+s.swift_version   = '4.2'
 s.requires_arc = true
 s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.2' }
 s.libraries = 'compression'
