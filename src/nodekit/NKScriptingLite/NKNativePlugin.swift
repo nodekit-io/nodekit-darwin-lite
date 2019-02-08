@@ -39,4 +39,6 @@ import JavaScriptCore
 @objc public protocol NKNativeProxy: AnyObject {
     
     var nkScriptObject: JSValue? { get set }
+    
+    #error("NKNative proxy needs a reference to it's JSValue, needs to be updated to NKScriptValue")
 }

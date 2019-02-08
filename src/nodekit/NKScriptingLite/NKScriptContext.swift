@@ -26,15 +26,46 @@ public protocol NKScriptContext: class {
     
     var id: Int { get }
 
-    func loadPlugin(_ object: NKNativePlugin) -> Void
+    var plugins: [String: NKNativePlugin] { get set } //namespace -> plugin
     
-    func injectJavaScript(_ script: NKScriptSource) -> Void
+    var sources: [String: NKScriptSource] { get set } //filename -> source
     
-    func evaluateJavaScript(_ javaScriptString: String, completionHandler: ((AnyObject?,NSError?) -> Void)?)
+    func loadPlugin(_ plugin: NKNativePlugin) -> Void
     
-    func serialize(_ object: AnyObject?) -> String
+    func evaluateJavaScript(_ javaScriptString: String, completionHandler: ((Any?,NSError?) -> Void)?)
+    
+    func setObjectForNamespace(_ object: AnyObject, namespace: String) -> JSValue?
 
     func stop() -> Void
+}
+
+extension NKScriptContext {
+    
+    public func stop() -> Void {
+        
+        for plugin in plugins.values {
+            if let proxy = plugin as? NKNativeProxy {
+                proxy.nkScriptObject = nil
+            }
+            if let disposable = plugin as? NKDisposable {
+                disposable.dispose()
+            }
+        }
+        
+        for script in sources.values {
+            script.eject()
+        }
+        
+        plugins.removeAll()
+        sources.removeAll()
+    }
+    
+    func injectJavaScript(_ script: NKScriptSource) -> Void {
+        
+        script.inject(self)
+        
+        sources[script.filename] = script
+    }
 }
 
 public protocol NKScriptContextDelegate: class {

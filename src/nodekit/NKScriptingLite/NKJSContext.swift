@@ -25,8 +25,8 @@ open class NKJSContext: NSObject {
     fileprivate let _jsContext: JSContext
     fileprivate let _id: Int
     
-    private var plugins: [String: NKNativePlugin] = [:] //namespace -> plugin
-    private var sources: [String: NKScriptSource] = [:] //filename -> source
+    public var plugins: [String: NKNativePlugin] = [:] //namespace -> plugin
+    public var sources: [String: NKScriptSource] = [:] //filename -> source
     
     internal init(_ jsContext: JSContext, id: Int) {
         _jsContext = jsContext
@@ -120,98 +120,16 @@ extension NKJSContext: NKScriptContext {
         )
     }
 
-    public func injectJavaScript(_ script: NKScriptSource) -> Void {
-        
-        script.inject(self)
-      
-        sources[script.filename] = script
-    }
-
     public func evaluateJavaScript(_ javaScriptString: String,
-        completionHandler: ((AnyObject?,
+        completionHandler: ((Any?,
         NSError?) -> Void)?) {
         
         let result = self._jsContext.evaluateScript(javaScriptString)
         
         completionHandler?(result, nil)
     }
-    
-    public func stop() -> Void {
-        
-        for plugin in plugins.values {
-            if let proxy = plugin as? NKNativeProxy {
-                proxy.nkScriptObject = nil
-            }
-            if let disposable = plugin as? NKDisposable {
-                disposable.dispose()
-            }
-        }
 
-        for script in sources.values {
-            script.eject()
-        }
-
-        plugins.removeAll()
-        sources.removeAll()
-    }
-
-    public func serialize(_ object: AnyObject?) -> String {
-    
-        var obj: AnyObject? = object
-        
-        if let val = obj as? NSValue {
-        
-            obj = val as? NSNumber ?? val.nonretainedObjectValue as AnyObject?
-        }
-
-        if let s = obj as? String {
-         
-            let d = try? JSONSerialization.data(withJSONObject: [s], options: JSONSerialization.WritingOptions(rawValue: 0))
-            
-            let json = NSString(data: d!, encoding: String.Encoding.utf8.rawValue)!
-            
-            return json.substring(with: NSMakeRange(1, json.length - 2))
-            
-        } else if let n = obj as? NSNumber {
-            
-            if CFGetTypeID(n) == CFBooleanGetTypeID() {
-            
-                return n.boolValue.description
-            }
-            
-            return n.stringValue
-        
-        } else if let date = obj as? Date {
-          
-            return "\"\(date.toJSONDate())\""
-        
-        } else if let _ = obj as? Data {
-       
-            // TODO: map to Uint8Array object
-        
-        } else if let a = obj as? [AnyObject] {
-        
-            return "[" + a.map(self.serialize).joined(separator: ", ") + "]"
-       
-        } else if let d = obj as? [String: AnyObject] {
-        
-            return "{" + d.keys.map {"\"\($0)\": \(self.serialize(d[$0]!))"}.joined(separator: ", ") + "}"
-        
-        } else if obj === NSNull() {
-        
-            return "null"
-       
-        } else if obj == nil {
-       
-            return "undefined"
-       
-        }
-       
-        return "'\(obj!)'"
-    }
-
-    // private methods
-    fileprivate func setObjectForNamespace(_ object: AnyObject, namespace: String) -> JSValue? {
+    public func setObjectForNamespace(_ object: AnyObject, namespace: String) -> JSValue? {
 
         let global = _jsContext.globalObject
 
