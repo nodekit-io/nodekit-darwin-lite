@@ -46,7 +46,7 @@ class SampleAppDelegate: NSObject, NSApplicationDelegate, NKScriptContextDelegat
 
     func setupStatusMenu() {
         
-            statusItem.image = NSImage(named: NSImage.Name(rawValue: "MenuIcon"))
+            statusItem.image = NSImage(named: NSImage.Name("MenuIcon"))
         
             statusItem.title = "";
         

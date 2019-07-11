@@ -25,6 +25,12 @@ var functionExport = require("./function_export");
 
 functionExport()
 
+console.log("variadic", "args", "test", {}, new Date())
+console.warn("variadic", "args", "test")
+console.error("variadic", "args", "test")
+console.info("variadic", "args", "test")
+console.dir("variadic", "args", "test")
+
 setInterval(function() {
 
     io.nodekit.test.logconsole("interval fire");
