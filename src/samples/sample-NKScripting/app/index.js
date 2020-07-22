@@ -36,12 +36,16 @@ setInterval(function() {
     io.nodekit.test.logconsole("interval fire");
     io.nodekit.test.logconsole("native set property: " + io.nodekit.test.nativeKey);
 
+    setTimeout(() => {
+        console.log("Inner timeout")
+    }, 500)
+
 }, 2000)
 
 var timerId = setTimeout(function() {
             
-    io.nodekit.test.logconsole("timeout fire " + timerId);
+    console.log("timeout fire " + timerId);
     
-}, 1000)
+}, 500)
 
 clearTimeout(timerId)

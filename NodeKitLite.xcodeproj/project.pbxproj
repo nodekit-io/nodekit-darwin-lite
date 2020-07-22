@@ -356,6 +356,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -403,7 +404,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd $SRCROOT/src/nodekit/NKScripting\nrm -f lib-scripting.nkar\nzip -r lib-scripting.nkar lib-scripting";
+			shellScript = "cd $SRCROOT/src/nodekit/NKScripting\nrm -f lib-scripting.nkar\nzip -r lib-scripting.nkar lib-scripting\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -581,6 +582,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/src/nodekit/platform/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 0.13.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.nodekit.NKScriptingLite;
 				PRODUCT_NAME = NKScripting;
 				SKIP_INSTALL = YES;
@@ -606,6 +608,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/src/nodekit/platform/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 0.13.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.nodekit.NKScriptingLite;
 				PRODUCT_NAME = NKScripting;
 				SKIP_INSTALL = YES;
